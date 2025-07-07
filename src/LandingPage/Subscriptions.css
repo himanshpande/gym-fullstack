@@ -1,0 +1,74 @@
+.subscriptions-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.subscription-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+.subscription-card {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.subscription-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+
+.card-header {
+  background-color: #00b894;
+  color: white;
+  font-weight: bold;
+  padding: 16px;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.card-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.duration {
+  font-size: 1rem;
+  color: #555;
+  margin: 10px 0;
+}
+
+.price {
+  font-size: 1.3rem;
+  color: #2d3436;
+  font-weight: bold;
+}
+
+.add-to-cart-btn {
+  margin-top: 15px;
+  background-color: #0984e3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #0652dd;
+}

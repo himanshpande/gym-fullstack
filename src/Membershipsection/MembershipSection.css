@@ -1,0 +1,100 @@
+/* Main section */
+.membership-section {
+  padding: 60px 20px;
+  background: linear-gradient(to right, #111, #222);
+  color: #fff;
+  text-align: center;
+}
+
+/* Title and subtitle */
+.membership-title {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #00d8ff;
+}
+
+.membership-subtitle {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  color: #ccc;
+}
+
+/* Cards container */
+.membership-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Individual card */
+.membership-card {
+  background: #1c1c1c;
+  border-radius: 10px;
+  padding: 30px 20px;
+  width: 280px;
+  box-shadow: 0 8px 20px rgba(0, 216, 255, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border: 2px solid transparent;
+}
+
+/* Hover effect — this is now the highlight */
+.membership-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 15px 35px rgba(0, 216, 255, 0.25);
+  border: 2px solid #00d8ff;
+}
+
+/* Card headings */
+.membership-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* Price text */
+.price {
+  font-size: 1.3rem;
+  color: #00d8ff;
+  margin-bottom: 20px;
+}
+
+/* Feature list */
+.membership-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.membership-card ul li {
+  margin-bottom: 10px;
+}
+
+/* Button */
+.join-btn {
+  background-color: #00d8ff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.join-btn:hover {
+  background-color: #00a0c0;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .membership-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .membership-card {
+    width: 90%;
+  }
+}
