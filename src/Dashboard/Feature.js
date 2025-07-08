@@ -1065,6 +1065,7 @@ const GymFeatures = () => {
                       <CheckCircle style={{ width: '16px', height: '16px', color: '#10b981' }} />
                       {instruction}
                     </li>
+                    
                   ))}
                 </ul>
               </div>
