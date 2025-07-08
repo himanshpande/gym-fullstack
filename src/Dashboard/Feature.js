@@ -24,7 +24,9 @@ import {
   Pause,
   SkipForward,
   Volume2,
-  VolumeX
+  VolumeX,
+  Mic,
+  MicOff
 } from 'lucide-react';
 
 const GymFeatures = () => {
@@ -40,10 +42,84 @@ const GymFeatures = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [workoutComplete, setWorkoutComplete] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  // Voice and Sound Functions
+  const speak = (text) => {
+    if (!voiceEnabled) return;
+    
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 0.8;
+      speechSynthesis.speak(utterance);
+    }
+  };
+
+  const playSound = (type) => {
+    if (!soundEnabled) return;
+    
+    try {
+      // Create audio context for beep sounds
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Different sounds for different events
+      switch (type) {
+        case 'start':
+          oscillator.frequency.value = 800;
+          gainNode.gain.value = 0.3;
+          break;
+        case 'rest':
+          oscillator.frequency.value = 400;
+          gainNode.gain.value = 0.2;
+          break;
+        case 'complete':
+          oscillator.frequency.value = 1000;
+          gainNode.gain.value = 0.4;
+          break;
+        case 'countdown':
+          oscillator.frequency.value = 600;
+          gainNode.gain.value = 0.1;
+          break;
+        default:
+          oscillator.frequency.value = 500;
+          gainNode.gain.value = 0.2;
+      }
+      
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.2);
+    } catch (error) {
+      console.log('Audio not supported');
+    }
+  };
+
+  // Add countdown voice prompts
+  useEffect(() => {
+    if (workoutActive && !isPaused && timeLeft > 0) {
+      // Voice prompts for last 3 seconds
+      if (timeLeft <= 3 && timeLeft > 0) {
+        speak(timeLeft.toString());
+        playSound('countdown');
+      }
+      
+      // Voice prompts at specific intervals
+      if (timeLeft === 10) {
+        speak('10 seconds remaining');
+      } else if (timeLeft === 30 && !isResting) {
+        speak('30 seconds remaining');
+      }
+    }
+  }, [timeLeft, workoutActive, isPaused, isResting, voiceEnabled, soundEnabled]);
 
   useEffect(() => {
     let interval;
@@ -62,16 +138,15 @@ const GymFeatures = () => {
   }, [workoutActive, isPaused, timeLeft]);
 
   const handleTimerComplete = () => {
-    if (soundEnabled) {
-      // Audio notification would go here
-      console.log('Timer complete!');
-    }
+    playSound('complete');
     
     if (isResting) {
       setIsResting(false);
       if (currentSet < getCurrentExercise().sets) {
         setCurrentSet(prev => prev + 1);
         setTimeLeft(getCurrentExercise().duration);
+        speak(`Start ${getCurrentExercise().name} - Set ${currentSet + 1}`);
+        playSound('start');
       } else {
         handleNextExercise();
       }
@@ -79,6 +154,8 @@ const GymFeatures = () => {
       if (currentSet < getCurrentExercise().sets) {
         setIsResting(true);
         setTimeLeft(getCurrentExercise().restTime);
+        speak(`Rest for ${getCurrentExercise().restTime} seconds`);
+        playSound('rest');
       } else {
         handleNextExercise();
       }
@@ -90,10 +167,15 @@ const GymFeatures = () => {
       setCurrentExerciseIndex(prev => prev + 1);
       setCurrentSet(1);
       setIsResting(false);
-      setTimeLeft(getWorkoutExercises()[currentExerciseIndex + 1].duration);
+      const nextExercise = getWorkoutExercises()[currentExerciseIndex + 1];
+      setTimeLeft(nextExercise.duration);
+      speak(`Next exercise: ${nextExercise.name} - Set 1`);
+      playSound('start');
     } else {
       setWorkoutComplete(true);
       setWorkoutActive(false);
+      speak('Workout complete! Great job!');
+      playSound('complete');
     }
   };
 
@@ -111,14 +193,23 @@ const GymFeatures = () => {
     setCurrentSet(1);
     setIsResting(false);
     setWorkoutComplete(false);
-    setTimeLeft(getWorkoutExercises()[0].duration);
+    const firstExercise = getWorkoutExercises()[0];
+    setTimeLeft(firstExercise.duration);
+    speak(`Starting workout: ${selectedWorkout.name}. First exercise: ${firstExercise.name} - Set 1`);
+    playSound('start');
   };
 
   const pauseWorkout = () => {
     setIsPaused(!isPaused);
+    if (!isPaused) {
+      speak('Workout paused');
+    } else {
+      speak('Workout resumed');
+    }
   };
 
   const skipExercise = () => {
+    speak('Skipping exercise');
     handleNextExercise();
   };
 
@@ -1065,7 +1156,7 @@ const GymFeatures = () => {
                       <CheckCircle style={{ width: '16px', height: '16px', color: '#10b981' }} />
                       {instruction}
                     </li>
-                    
+
                   ))}
                 </ul>
               </div>
