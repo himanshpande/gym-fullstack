@@ -5,8 +5,9 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import TrainersSection from '../TrainersSection/Trainers';
 import MembershipSection from '../Membershipsection/MembershipSection';
-import ReviewsSection from '../Reviews/ReviewsSection';
+import ReviewsSection from '../Reviews/ContactSection';
 import ProfileDropdown from '../ProfileDropdown/ProfileDropdown'; // 👈 import
+import Footer from '../Footer/footer.jsx'; // 👈 import Footer component
 
 
 
@@ -31,9 +32,9 @@ function Home() {
         <div className="logo">MyApp</div>
         <ul className="nav-links">
           <li><a href="/">Home</a></li>
-          <li><a href="#features">Features</a></li>
+          <li><a href="/Feature">Features</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="/settings">Contact</a></li>
+          <li><a href="/ContactSection">Contact</a></li>
         </ul>
 
         {/* Profile Icon with Dropdown */}
@@ -52,9 +53,13 @@ function Home() {
         </div>
       </section>
 
+      <div id="features">
+        
+      </div>
       <TrainersSection />
       <MembershipSection />
       <ReviewsSection />
+      <Footer />
       
     </div>
   );
