@@ -1,38 +1,57 @@
-// src/components/ProfileDropdown/ProfileDropdown.js
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom'; // ✅ Required for navigation
+import React from 'react';
 import './ProfileDropdown.css';
 
+function ProfileDropdown({ onClose, user }) {
+  console.log('ProfileDropdown rendered with user:', user); // Debug log
 
-const ProfileDropdown = ({ onClose }) => {
-  const dropdownRef = useRef();
+  // Get profile picture URL with fallback
+  const getProfilePicture = () => {
+    if (user?.profilePicture) {
+      return user.profilePicture;
+    }
+  };
+    
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose]);
+  const handleLogout = () => {
+    console.log('Logout clicked'); // Debug log
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
 
   return (
-    <div className="profile-dropdown animate-dropdown" ref={dropdownRef}>
-      <ul>
-        <li>
-          <Link to="/profile">👤 Account</Link>
-        </li>
-        <li>
-          <Link to="/settings">⚙️ Settings</Link>
-        </li>
-        <li>
-          <a href="/logout">🚪 Logout</a>
-        </li>
-      </ul>
+    <div className="profile-dropdown-overlay" onClick={onClose}>
+      <div className="profile-dropdown" onClick={(e) => e.stopPropagation()}>
+        <div className="profile-dropdown-header">
+          <img 
+            src={getProfilePicture()} 
+            alt="Profile" 
+            className="profile-dropdown-avatar"
+          />
+          <div className="profile-dropdown-info">
+            <h4>{user?.name || 'User'}</h4>
+            <p>{user?.email || 'No email provided'}</p>
+          </div>
+        </div>
+        
+        <div className="profile-dropdown-menu">
+          <a href="/profile" className="dropdown-item">
+            <span>👤</span> View Profile
+          </a>
+          <a href="/settings" className="dropdown-item">
+            <span>⚙️</span> Settings
+          </a>
+          <a href="/help" className="dropdown-item">
+            <span>❓</span> Help
+          </a>
+          <hr className="dropdown-divider" />
+          <button className="dropdown-item logout-btn" onClick={handleLogout}>
+            <span>🚪</span> Logout
+          </button>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default ProfileDropdown;

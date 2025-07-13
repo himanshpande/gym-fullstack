@@ -1,61 +1,198 @@
-/* LoginForm.css */
-
+/* Base and background setup */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0d1117, #161b22);
+  color: #fff;
 }
 
-.login-container {
+.dark-container {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  padding: 20px;
 }
 
-.login-form {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 350px;
+/* Glass card layout */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  border-radius: 18px;
+  width: 90%;
+  max-width: 950px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 0 35px rgba(0, 255, 255, 0.05);
+  transition: transform 0.5s ease;
 }
 
-.login-form h2 {
-  margin-bottom: 20px;
-  text-align: center;
+/* Image Section */
+.image-section {
+  flex: 1;
+  background: linear-gradient(to bottom, #0e1117, #1c1f27);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.image-section img {
+  max-width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.image-section img:hover {
+  transform: scale(1.05);
+}
+
+/* Form Section */
+.form-section {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Toggle between login/signup */
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.toggle-buttons button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 12px 22px;
+  margin: 0 12px;
+  color: #888;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-buttons button.active {
+  color: #00ffff;
+  border-color: #00ffff;
+}
+
+.toggle-buttons button:hover {
+  color: #00ffff;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
 }
 
 .form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
+  width: 100%;
+  max-width: 340px;
 }
 
 .form-group input {
   width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 14px;
+  border-radius: 8px;
+  background-color: #0f131a;
+  border: 1px solid #2c313a;
+  color: #fff;
+  font-size: 16px;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+.form-group input:focus {
+  border-color: #00ffff;
+  background-color: #161b22;
   outline: none;
 }
 
-button {
+/* Submit Button */
+button[type="submit"] {
   width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
+  max-width: 340px;
+  padding: 14px;
+  background: #00ffff;
   border: none;
-  border-radius: 5px;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s;
 }
 
-button:hover {
-  background-color: #0056b3;
+button[type="submit"]:hover {
+  background: #00e0e0;
+  transform: scale(1.02);
+}
+
+/* Error and Success Messages */
+.error-message,
+.success-message {
+  width: 100%;
+  max-width: 340px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin: 0 auto 10px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.error-message {
+  background-color: #330000;
+  color: #ff4d4d;
+  border-left: 4px solid #ff4d4d;
+}
+
+.success-message {
+  background-color: #003300;
+  color: #00ff99;
+  border-left: 4px solid #00ff99;
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .glass-card {
+    flex-direction: column;
+    padding: 20px 0;
+  }
+
+  .form-section {
+    padding: 20px;
+  }
+
+  .image-section {
+    padding: 20px;
+  }
 }
