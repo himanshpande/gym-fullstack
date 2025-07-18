@@ -64,7 +64,11 @@ const CartSidebar = ({ cartItems, onClose }) => {
       </div>
 
       {showBuyNow && (
-        <BuyNow totalAmount={total} onClose={handleBuyNowClose} />
+        <BuyNow 
+          totalAmount={total} 
+          onClose={handleBuyNowClose} 
+          cartItems={cartItems}
+        />
       )}
     </>
   );

@@ -1,220 +1,242 @@
+import React, { useState, useEffect } from 'react';
+import { Calendar, X, CheckCircle, Clock, User } from 'lucide-react';
+import './OverviewSection.css';
+import apiService from '../services/api';
+import WorkoutHistory from './WorkoutHistory.tsx';
 
-"use client"
-import './OverviewSection.css'
-import { 
-  Dumbbell, 
-  Calendar, 
-  TrendingUp, 
-  Target, 
-  Clock, 
-  Flame, 
-  User, 
-  ChevronRight,
-  Trophy,
-  Heart,
-  Activity
-} from "lucide-react"
-
-
-const OverviewSection = () => {
-  // Mock data - this would come from your backend
-  const workoutSummary = {
-    lastWorkout: "Upper Body Strength",
-    duration: "45 mins",
-    caloriesBurned: 320,
-    weeklyProgress: { completed: 3, total: 5 }
-  }
-
-  const upcomingSchedule = [
-    { type: "Yoga Class", time: "6:00 PM", date: "Today", instructor: "Sarah M." },
-    { type: "Personal Training", time: "7:30 AM", date: "Tomorrow", instructor: "Mike R." },
-    { type: "HIIT Session", time: "5:00 PM", date: "Friday", instructor: "Alex K." }
-  ]
-
-  const fitnessProgress = {
-    currentWeight: "75.2 kg",
-    weightChange: "-2.3 kg",
-    goalWeight: "70 kg",
-    muscleGain: "+1.2 kg",
-    fatLoss: "-3.5 kg"
-  }
-
-  const currentGoal = {
-    title: "Lose 5kg in 2 months",
-    progress: 46, // percentage
-    daysRemaining: 32
-  }
-
-  const recentActivities = [
-    { type: "Workout", name: "Upper Body Strength", date: "Today", duration: "45 min" },
-    { type: "Class", name: "Morning Yoga", date: "Yesterday", duration: "60 min" },
-    { type: "Cardio", name: "Treadmill Run", date: "2 days ago", duration: "30 min" }
-  ]
-
-  const motivationalTip = "You've completed 3 workouts this week. Keep the momentum going! 💪"
-
-  return (
-    <>
-      {/* Header */}
-      <div className="content-header">
-        <h2 className="main-title">Your Fitness Dashboard</h2>
-        <p className="main-subtitle">Track your progress and stay motivated!</p>
-      </div>
-
-      {/* Workout Summary */}
-      <section className="dashboard-section workout-summary">
-        <h3 className="section-title">
-          <span className="section-emoji">💪</span>
-          Last Workout Summary
-        </h3>
-        <div className="summary-card">
-          <div className="summary-main">
-            <div className="workout-info">
-              <div className="workout-type">
-                <Dumbbell className="icon" />
-                <span>{workoutSummary.lastWorkout}</span>
-              </div>
-              <div className="workout-stats">
-                <div className="stat-item">
-                  <Clock className="stat-icon" />
-                  <span>{workoutSummary.duration}</span>
-                </div>
-                <div className="stat-item">
-                  <Flame className="stat-icon" />
-                  <span>{workoutSummary.caloriesBurned} cal</span>
-                </div>
-              </div>
-            </div>
-            <div className="weekly-progress">
-              <div className="progress-header">
-                <span>Weekly Progress</span>
-                <span>{workoutSummary.weeklyProgress.completed}/{workoutSummary.weeklyProgress.total}</span>
-              </div>
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
-                  style={{ width: `${(workoutSummary.weeklyProgress.completed / workoutSummary.weeklyProgress.total) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Upcoming Schedule */}
-      <section className="dashboard-section schedule-section">
-        <h3 className="section-title">
-          <span className="section-emoji">📅</span>
-          Upcoming Schedule
-        </h3>
-        <div className="schedule-list">
-          {upcomingSchedule.map((item, index) => (
-            <div key={index} className="schedule-item" style={{ animationDelay: `${index * 100}ms` }}>
-              <div className="schedule-info">
-                <div className="schedule-type">{item.type}</div>
-                <div className="schedule-details">
-                  <span className="time">{item.time}</span>
-                  <span className="date">{item.date}</span>
-                </div>
-                <div className="instructor">with {item.instructor}</div>
-              </div>
-              <ChevronRight className="chevron-icon" />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Fitness Progress & Goal Tracker */}
-      <div className="dashboard-row">
-        <section className="dashboard-section progress-section">
-          <h3 className="section-title">
-            <span className="section-emoji">📊</span>
-            Fitness Progress
-          </h3>
-          <div className="progress-grid">
-            <div className="progress-item">
-              <div className="progress-label">Current Weight</div>
-              <div className="progress-value">{fitnessProgress.currentWeight}</div>
-              <div className="progress-change negative">{fitnessProgress.weightChange}</div>
-            </div>
-            <div className="progress-item">
-              <div className="progress-label">Muscle Gain</div>
-              <div className="progress-value">{fitnessProgress.muscleGain}</div>
-              <div className="progress-change positive">↗</div>
-            </div>
-            <div className="progress-item">
-              <div className="progress-label">Fat Loss</div>
-              <div className="progress-value">{fitnessProgress.fatLoss}</div>
-              <div className="progress-change negative">↘</div>
-            </div>
-          </div>
-        </section>
-
-        <section className="dashboard-section goal-section">
-          <h3 className="section-title">
-            <span className="section-emoji">🎯</span>
-            Current Goal
-          </h3>
-          <div className="goal-card">
-            <div className="goal-title">{currentGoal.title}</div>
-            <div className="goal-progress">
-              <div className="goal-progress-bar">
-                <div 
-                  className="goal-progress-fill" 
-                  style={{ width: `${currentGoal.progress}%` }}
-                ></div>
-              </div>
-              <div className="goal-stats">
-                <span className="goal-percentage">{currentGoal.progress}%</span>
-                <span className="goal-days">{currentGoal.daysRemaining} days left</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {/* Recent Activities */}
-      <section className="dashboard-section activities-section">
-        <h3 className="section-title">
-          <span className="section-emoji">📝</span>
-          Recent Activities
-        </h3>
-        <div className="activities-list">
-          {recentActivities.map((activity, index) => (
-            <div key={index} className="activity-item" style={{ animationDelay: `${index * 100}ms` }}>
-              <div className="activity-icon">
-                {activity.type === 'Workout' && <Dumbbell className="icon" />}
-                {activity.type === 'Class' && <User className="icon" />}
-                {activity.type === 'Cardio' && <Heart className="icon" />}
-              </div>
-              <div className="activity-info">
-                <div className="activity-name">{activity.name}</div>
-                <div className="activity-details">
-                  <span>{activity.date}</span>
-                  <span>•</span>
-                  <span>{activity.duration}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Motivational Tip */}
-      <section className="dashboard-section motivation-section">
-        <h3 className="section-title">
-          <span className="section-emoji">🧠</span>
-          Daily Motivation
-        </h3>
-        <div className="motivation-card">
-          <div className="motivation-icon">
-            <Trophy className="icon" />
-          </div>
-          <p className="motivation-text">{motivationalTip}</p>
-        </div>
-      </section>
-    </>
-  )
+// Add a type for scheduled workouts
+interface ScheduledWorkout {
+  _id: string;
+  userId: string;
+  type: string;
+  trainer: string;
+  dateTime: string;
+  category: string;
+  duration: number;
+  createdAt: string;
 }
 
-export default OverviewSection
+type UserStats = {
+  week: {
+    workoutsPlanned: number;
+  };
+  month: {
+    workoutsDone: number;
+    totalTime: string;
+  };
+};
+
+declare global {
+  interface Window {
+    refreshOverview?: () => void;
+  }
+}
+
+const OverviewSection = ({ userId }: { userId: string }) => {
+  console.log('OverviewSection userId:', userId); 
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [loadingStats, setLoadingStats] = useState(true);
+  
+  const fetchUserStats = async () => {
+    try {
+      const stats = await apiService.getUserStats(userId);
+      console.log('User Stats:', stats);
+      setUserStats(stats);
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserStats();
+    window.refreshOverview = fetchUserStats;
+  }, [userId]);
+
+  if (loadingStats) {
+    return <div>Loading stats...</div>;
+  }
+
+  return (
+    <div className="overview-section">
+      <h2>📊 Weekly & Monthly Stats</h2>
+      <div>
+        <p>🗓️ Workouts Planned This Week: {userStats?.week.workoutsPlanned ?? 'N/A'}</p>
+        <p>✅ Workouts Done This Month: {userStats?.month.workoutsDone ?? 'N/A' }</p>
+        <p>⏱️ Total Time Spent This Month: {userStats?.month.totalTime ?? 'N/A' } hrs</p>
+      </div>
+    </div>
+  );
+};
+
+// Mini Overview Component
+const MiniOverview = ({ userId }: { userId: string }) => {
+  const [scheduledWorkouts, setScheduledWorkouts] = useState<ScheduledWorkout[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  const fetchScheduledWorkouts = async () => {
+    try {
+      const data = await apiService.getScheduledWorkouts(userId);
+      setScheduledWorkouts(data);
+    } catch (error) {
+      console.error('Error fetching scheduled workouts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchScheduledWorkouts();
+    window.refreshOverview = fetchScheduledWorkouts;
+  }, [userId]);
+
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    const isTomorrow = date.toDateString() === new Date(now.getTime() + 24 * 60 * 60 * 1000).toDateString();
+    
+    let dateLabel = date.toLocaleDateString();
+    if (isToday) dateLabel = 'Today';
+    else if (isTomorrow) dateLabel = 'Tomorrow';
+    
+    return `${dateLabel} at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  };
+  
+  const getTimeUntilWorkout = (dateString: string) => {
+    const workoutDate = new Date(dateString);
+    const now = new Date();
+    const diff = workoutDate.getTime() - now.getTime();
+    
+    if (diff < 0) return 'Past due';
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return `In ${days} day${days > 1 ? 's' : ''}`;
+    }
+    
+    if (hours > 0) {
+      return `In ${hours}h ${minutes}m`;
+    }
+    
+    return `In ${minutes}m`;
+  };
+
+  const handleCancel = async (scheduleId: string) => {
+    try {
+      await apiService.cancelScheduledWorkout(scheduleId);
+      setScheduledWorkouts((prev) =>
+        prev.filter((workout) => workout._id !== scheduleId)
+      );
+    } catch (error) {
+      console.error('Error cancelling workout:', error);
+      alert('Failed to cancel workout');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="overview-card">
+        <div className="loading-skeleton">
+          <div className="skeleton-header"></div>
+          <div className="skeleton-content">
+            <div className="skeleton-item"></div>
+            <div className="skeleton-item"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overview-card">
+      <div className="overview-header">
+        <h3 className="overview-title">Scheduled Workouts</h3>
+        <Calendar className="overview-icon" />
+      </div>
+      
+      {scheduledWorkouts.length > 0 ? (
+        <div className="scheduled-workouts">
+          {scheduledWorkouts.map((workout) => (
+            <div key={workout._id} className="scheduled-workout-item">
+              <div className="workout-content">
+                <div className="workout-header">
+                  <h4 className="workout-name">{workout.type}</h4>
+                  <span className="workout-category">{workout.category}</span>
+                </div>
+                <div className="workout-meta">
+                  <div className="meta-item">
+                    <Clock className="meta-icon" />
+                    {formatDateTime(workout.dateTime)}
+                  </div>
+                  <div className="meta-item">
+                    <User className="meta-icon" />
+                    {workout.trainer}
+                  </div>
+                </div>
+              </div>
+              <div className="workout-duration">
+                <div className="duration-text">{workout.duration} min</div>
+                <div className="time-until">{getTimeUntilWorkout(workout.dateTime)}</div>
+                <button 
+                  onClick={() => handleCancel(workout._id.toString())} 
+                  className="cancel-button"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="empty-state">
+          <Calendar className="empty-icon" />
+          <p className="empty-title">No scheduled workouts</p>
+          <p className="empty-subtitle">Schedule a workout to get started!</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Main App Component
+const App = () => {
+  const userId = 'user123';
+
+  return (
+    <div className="app">
+      {/* Header */}
+      <header className="header">
+        <div className="header-container">
+          <div className="header-content">
+            <div className="logo">
+              <h1 className="logo-text">PulseForge</h1>
+            </div>
+            <div className="user-info">
+              <div className="user-avatar">
+                <User className="user-icon" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="main">
+        <div className="dashboard-container">
+          <div className="dashboard-content">
+            <OverviewSection userId={userId} />
+            <MiniOverview userId={userId} />
+            <WorkoutHistory userId={userId} />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default App;

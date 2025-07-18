@@ -1,89 +1,135 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Edit3, Mail, Calendar, Target, TrendingUp, Dumbbell, Clock, Trophy, Zap } from "lucide-react";
+import { 
+  Camera, 
+  Edit3, 
+  Mail, 
+  Calendar, 
+  Phone, 
+  MapPin,
+  Shield,
+  Bell,
+  Eye,
+  EyeOff,
+  Save,
+  X,
+  User,
+  Settings,
+  Lock,
+  Heart,
+  AlertCircle,
+  CheckCircle
+} from "lucide-react";
+import './ProfileSection.css';
 
 const ProfileSection = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [activeTab, setActiveTab] = useState('personal');
+  const [showPassword, setShowPassword] = useState(false);
+  const [notifications, setNotifications] = useState({
+    email: true,
+    sms: false,
+    push: true,
+    marketing: false
+  });
+  const [privacy, setPrivacy] = useState({
+    profileVisible: true,
+    showEmail: false,
+    showPhone: false,
+    showAddress: false
+  });
 
-  // Mock user data - replace with actual API call
+  // Load user data with persistence
   useEffect(() => {
-    const fetchUserData = async () => {
+    const loadUserData = async () => {
       try {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Check if user data exists in localStorage
+        const savedUser = localStorage.getItem('gymUserProfile');
         
-        // Mock user data for gym context
-        const mockUser = {
-          id: 1,
-          name: "John Doe",
-          email: "john@example.com",
-          profilePicture: null,
-          joinDate: "2024-01-15",
-          membershipType: "Premium",
-          fitnessLevel: "Intermediate",
-          goals: "Build Muscle",
-          height: "5'10\"",
-          weight: "180 lbs",
-          emergencyContact: "+1 (555) 123-4567",
-          // Fitness stats
-          totalWorkouts: 45,
-          weeklyGoal: 4,
-          weeklyCompleted: 3,
-          currentStreak: 5,
-          maxStreak: 12,
-          totalHoursWorked: 67.5,
-          caloriesBurned: 15420
-        };
-        
-        setUser(mockUser);
-        setEditForm(mockUser);
+        if (savedUser) {
+          const userData = JSON.parse(savedUser);
+          setUser(userData);
+          setEditForm(userData);
+          
+          // Load settings
+          const savedNotifications = localStorage.getItem('userNotifications');
+          const savedPrivacy = localStorage.getItem('userPrivacy');
+          
+          if (savedNotifications) {
+            setNotifications(JSON.parse(savedNotifications));
+          }
+          if (savedPrivacy) {
+            setPrivacy(JSON.parse(savedPrivacy));
+          }
+        } else {
+          // Create default user data
+          const defaultUser = {
+            id: 1,
+            name: "John Doe",
+            email: "john@example.com",
+            phone: "+1 (555) 123-4567",
+            address: "123 Fitness Street, Gym City, GC 12345",
+            profilePicture: null,
+            joinDate: "2024-01-15",
+            membershipType: "Premium",
+            fitnessLevel: "Intermediate",
+            goals: "Build Muscle",
+            height: "5'10\"",
+            weight: "180 lbs",
+            emergencyContact: "+1 (555) 987-6543",
+            emergencyName: "Jane Doe",
+            dateOfBirth: "1990-05-15",
+            gender: "Male",
+            medicalConditions: "",
+            allergies: "",
+            currentPassword: "",
+            newPassword: "",
+            confirmPassword: ""
+          };
+          
+          setUser(defaultUser);
+          setEditForm(defaultUser);
+          // Don't save to localStorage until user makes changes
+        }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error loading user data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    loadUserData();
   }, []);
 
-  // Gym-specific stats
-  const fitnessStats = [
-    { 
-      icon: Dumbbell, 
-      label: "Total Workouts", 
-      value: user?.totalWorkouts || 0, 
-      color: "#3B82F6"
-    },
-    { 
-      icon: Target, 
-      label: "Weekly Progress", 
-      value: `${user?.weeklyCompleted || 0}/${user?.weeklyGoal || 4}`, 
-      color: "#10B981"
-    },
-    { 
-      icon: Zap, 
-      label: "Current Streak", 
-      value: `${user?.currentStreak || 0} days`, 
-      color: "#F59E0B"
-    },
-    { 
-      icon: Clock, 
-      label: "Hours Trained", 
-      value: `${user?.totalHoursWorked || 0}h`, 
-      color: "#8B5CF6"
-    },
-  ];
+  // Save user data to localStorage
+  const saveUserData = (userData) => {
+    localStorage.setItem('gymUserProfile', JSON.stringify(userData));
+  };
 
-  // Handle profile picture upload
+  // Handle profile picture upload with persistence
   const handleProfilePictureUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        setUser(prev => ({ ...prev, profilePicture: e.target.result }));
+        const updatedUser = { ...user, profilePicture: e.target.result };
+        setUser(updatedUser);
+        setEditForm(updatedUser);
+        saveUserData(updatedUser); // Save immediately when profile picture is uploaded
       };
       reader.readAsDataURL(file);
     }
@@ -91,10 +137,38 @@ const ProfileSection = () => {
 
   // Handle form submission
   const handleSaveProfile = () => {
-    setUser(editForm);
+    // Validate required fields
+    if (!editForm.name || !editForm.email) {
+      alert('Name and email are required fields');
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(editForm.email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    // Validate password if changing
+    if (editForm.newPassword && editForm.newPassword !== editForm.confirmPassword) {
+      alert('New passwords do not match');
+      return;
+    }
+
+    const updatedUser = { ...editForm };
+    
+    // Don't save password fields
+    delete updatedUser.currentPassword;
+    delete updatedUser.newPassword;
+    delete updatedUser.confirmPassword;
+
+    setUser(updatedUser);
+    saveUserData(updatedUser);
     setIsEditing(false);
-    // Here you would typically send the update to your API
-    console.log('Profile updated:', editForm);
+    
+    // Show success message
+    alert('Profile updated successfully!');
   };
 
   // Handle input changes
@@ -102,45 +176,490 @@ const ProfileSection = () => {
     setEditForm(prev => ({ ...prev, [field]: value }));
   };
 
+  // Handle notification settings
+  const handleNotificationChange = (type, value) => {
+    const updatedNotifications = { ...notifications, [type]: value };
+    setNotifications(updatedNotifications);
+    localStorage.setItem('userNotifications', JSON.stringify(updatedNotifications));
+  };
+
+  // Handle privacy settings
+  const handlePrivacyChange = (type, value) => {
+    const updatedPrivacy = { ...privacy, [type]: value };
+    setPrivacy(updatedPrivacy);
+    localStorage.setItem('userPrivacy', JSON.stringify(updatedPrivacy));
+  };
+
+  // Tab content renderer
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'personal':
+        return renderPersonalInfo();
+      case 'fitness':
+        return renderFitnessInfo();
+      case 'security':
+        return renderSecuritySettings();
+      case 'notifications':
+        return renderNotificationSettings();
+      case 'privacy':
+        return renderPrivacySettings();
+      default:
+        return renderPersonalInfo();
+    }
+  };
+
+  const renderPersonalInfo = () => (
+    <div className="tab-content">
+      <div className="form-grid">
+        <div className="form-group">
+          <label>Full Name *</label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editForm.name || ''}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              placeholder="Enter your full name"
+              required
+            />
+          ) : (
+            <div className="display-field">{user.name}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Email Address *</label>
+          {isEditing ? (
+            <input
+              type="email"
+              value={editForm.email || ''}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          ) : (
+            <div className="display-field">{user.email}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Phone Number</label>
+          {isEditing ? (
+            <input
+              type="tel"
+              value={editForm.phone || ''}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="Enter your phone number"
+            />
+          ) : (
+            <div className="display-field">{user.phone}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Date of Birth</label>
+          {isEditing ? (
+            <input
+              type="date"
+              value={editForm.dateOfBirth || ''}
+              onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+            />
+          ) : (
+            <div className="display-field">
+              {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString() : 'Not specified'}
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Gender</label>
+          {isEditing ? (
+            <select
+              value={editForm.gender || ''}
+              onChange={(e) => handleInputChange('gender', e.target.value)}
+            >
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          ) : (
+            <div className="display-field">{user.gender || 'Not specified'}</div>
+          )}
+        </div>
+
+        <div className="form-group full-width">
+          <label>Address</label>
+          {isEditing ? (
+            <textarea
+              value={editForm.address || ''}
+              onChange={(e) => handleInputChange('address', e.target.value)}
+              placeholder="Enter your address"
+              rows="3"
+            />
+          ) : (
+            <div className="display-field">{user.address}</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderFitnessInfo = () => (
+    <div className="tab-content">
+      <div className="form-grid">
+        <div className="form-group">
+          <label>Fitness Level</label>
+          {isEditing ? (
+            <select
+              value={editForm.fitnessLevel || ''}
+              onChange={(e) => handleInputChange('fitnessLevel', e.target.value)}
+            >
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Expert">Expert</option>
+            </select>
+          ) : (
+            <div className="display-field">{user.fitnessLevel}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Primary Goal</label>
+          {isEditing ? (
+            <select
+              value={editForm.goals || ''}
+              onChange={(e) => handleInputChange('goals', e.target.value)}
+            >
+              <option value="Build Muscle">Build Muscle</option>
+              <option value="Lose Weight">Lose Weight</option>
+              <option value="Improve Endurance">Improve Endurance</option>
+              <option value="General Fitness">General Fitness</option>
+              <option value="Strength Training">Strength Training</option>
+              <option value="Flexibility">Flexibility</option>
+              <option value="Sports Performance">Sports Performance</option>
+            </select>
+          ) : (
+            <div className="display-field">{user.goals}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Height</label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editForm.height || ''}
+              onChange={(e) => handleInputChange('height', e.target.value)}
+              placeholder="e.g., 5'10\\" 
+            />
+          ) : (
+            <div className="display-field">{user.height}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Weight</label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editForm.weight || ''}
+              onChange={(e) => handleInputChange('weight', e.target.value)}
+              placeholder="e.g., 180 lbs or 82 kg"
+            />
+          ) : (
+            <div className="display-field">{user.weight}</div>
+          )}
+        </div>
+
+        <div className="form-group full-width">
+          <label>Medical Conditions</label>
+          {isEditing ? (
+            <textarea
+              value={editForm.medicalConditions || ''}
+              onChange={(e) => handleInputChange('medicalConditions', e.target.value)}
+              placeholder="Any medical conditions we should know about..."
+              rows="3"
+            />
+          ) : (
+            <div className="display-field">{user.medicalConditions || 'None specified'}</div>
+          )}
+        </div>
+
+        <div className="form-group full-width">
+          <label>Allergies</label>
+          {isEditing ? (
+            <textarea
+              value={editForm.allergies || ''}
+              onChange={(e) => handleInputChange('allergies', e.target.value)}
+              placeholder="Any allergies we should know about..."
+              rows="3"
+            />
+          ) : (
+            <div className="display-field">{user.allergies || 'None specified'}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Emergency Contact Name</label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editForm.emergencyName || ''}
+              onChange={(e) => handleInputChange('emergencyName', e.target.value)}
+              placeholder="Emergency contact name"
+            />
+          ) : (
+            <div className="display-field">{user.emergencyName}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Emergency Contact Phone</label>
+          {isEditing ? (
+            <input
+              type="tel"
+              value={editForm.emergencyContact || ''}
+              onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
+              placeholder="Emergency contact phone"
+            />
+          ) : (
+            <div className="display-field">{user.emergencyContact}</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSecuritySettings = () => (
+    <div className="tab-content">
+      <div className="security-section">
+        <h3>Change Password</h3>
+        <div className="form-grid">
+          <div className="form-group">
+            <label>Current Password</label>
+            <div className="password-input">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={editForm.currentPassword || ''}
+                onChange={(e) => handleInputChange('currentPassword', e.target.value)}
+                placeholder="Enter current password"
+              />
+              <button 
+                type="button" 
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>New Password</label>
+            <input
+              type="password"
+              value={editForm.newPassword || ''}
+              onChange={(e) => handleInputChange('newPassword', e.target.value)}
+              placeholder="Enter new password"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Confirm New Password</label>
+            <input
+              type="password"
+              value={editForm.confirmPassword || ''}
+              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+              placeholder="Confirm new password"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="security-section">
+        <h3>Security Information</h3>
+        <div className="security-info">
+          <div className="security-item">
+            <div className="security-icon">
+              <Shield size={24} />
+            </div>
+            <div>
+              <h4>Two-Factor Authentication</h4>
+              <p>Add an extra layer of security to your account</p>
+              <button className="btn-secondary">Enable 2FA</button>
+            </div>
+          </div>
+
+          <div className="security-item">
+            <div className="security-icon">
+              <Lock size={24} />
+            </div>
+            <div>
+              <h4>Login Sessions</h4>
+              <p>Manage your active login sessions</p>
+              <button className="btn-secondary">View Sessions</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderNotificationSettings = () => (
+    <div className="tab-content">
+      <div className="notification-section">
+        <h3>Notification Preferences</h3>
+        <div className="notification-list">
+          <div className="notification-item">
+            <div>
+              <h4>Email Notifications</h4>
+              <p>Receive updates and important information via email</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={notifications.email}
+                onChange={(e) => handleNotificationChange('email', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+
+          <div className="notification-item">
+            <div>
+              <h4>SMS Notifications</h4>
+              <p>Get text messages for urgent updates</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={notifications.sms}
+                onChange={(e) => handleNotificationChange('sms', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+
+          <div className="notification-item">
+            <div>
+              <h4>Push Notifications</h4>
+              <p>Receive notifications in your browser</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={notifications.push}
+                onChange={(e) => handleNotificationChange('push', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+
+          <div className="notification-item">
+            <div>
+              <h4>Marketing Communications</h4>
+              <p>Receive promotional offers and fitness tips</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={notifications.marketing}
+                onChange={(e) => handleNotificationChange('marketing', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderPrivacySettings = () => (
+    <div className="tab-content">
+      <div className="privacy-section">
+        <h3>Privacy Settings</h3>
+        <div className="privacy-list">
+          <div className="privacy-item">
+            <div>
+              <h4>Profile Visibility</h4>
+              <p>Make your profile visible to other gym members</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={privacy.profileVisible}
+                onChange={(e) => handlePrivacyChange('profileVisible', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+
+          <div className="privacy-item">
+            <div>
+              <h4>Show Email Address</h4>
+              <p>Display your email address on your public profile</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={privacy.showEmail}
+                onChange={(e) => handlePrivacyChange('showEmail', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+
+          <div className="privacy-item">
+            <div>
+              <h4>Show Phone Number</h4>
+              <p>Display your phone number on your public profile</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={privacy.showPhone}
+                onChange={(e) => handlePrivacyChange('showPhone', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+
+          <div className="privacy-item">
+            <div>
+              <h4>Show Address</h4>
+              <p>Display your address on your public profile</p>
+            </div>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={privacy.showAddress}
+                onChange={(e) => handlePrivacyChange('showAddress', e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        minHeight: '400px',
-        flexDirection: 'column'
-      }}>
-        <div style={{
-          width: '48px',
-          height: '48px',
-          border: '4px solid #f3f4f6',
-          borderTop: '4px solid #3B82F6',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          marginBottom: '16px'
-        }}></div>
-        <p style={{ color: '#6B7280' }}>Loading profile...</p>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading profile...</p>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div style={{ textAlign: 'center', padding: '48px 0' }}>
-        <p style={{ color: '#6B7280', marginBottom: '16px' }}>No user data found. Please login again.</p>
-        <button 
-          onClick={() => window.location.href = '/auth'}
-          style={{
-            backgroundColor: '#3B82F6',
-            color: 'white',
-            padding: '8px 24px',
-            borderRadius: '8px',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
+      <div className="error-container">
+        <AlertCircle size={48} />
+        <p>No user data found. Please login again.</p>
+        <button className="btn-primary" onClick={() => window.location.href = '/auth'}>
           Login
         </button>
       </div>
@@ -148,559 +667,122 @@ const ProfileSection = () => {
   }
 
   return (
-    <div style={{margin: '0 auto', padding: '24px' }}>
+    <div className="profile-container">
       {/* Profile Header */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '16px', 
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden',
-        marginBottom: '32px'
-      }}>
-        <div style={{ 
-          background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)', 
-          height: '120px' 
-        }}></div>
-        <div style={{ padding: '0 32px 32px' }}>
-          <div style={{ display: 'flex', alignItems: 'end', gap: '32px', marginTop: '-64px' }}>
-            {/* Profile Picture */}
-            <div style={{ position: 'relative', marginBottom: '16px' }}>
-              <div style={{ 
-                width: '128px', 
-                height: '128px', 
-                borderRadius: '50%', 
-                backgroundColor: 'white', 
-                padding: '8px',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-              }}>
-                <img 
-                  src={user.profilePicture || "/api/placeholder/120/120"} 
-                  alt="Profile" 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '50%',
-                    objectFit: 'cover'
-                  }}
+      <div className="profile-header">
+        <div className="profile-banner"></div>
+        <div className="profile-info">
+          <div className="profile-picture-section">
+            <div className="profile-picture-container">
+              <img 
+                src={user.profilePicture || "/api/placeholder/120/120"} 
+                alt="Profile" 
+                className="profile-picture"
+              />
+              <label className="camera-button">
+                <Camera size={16} />
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleProfilePictureUpload}
+                  hidden
                 />
-                <label style={{
-                  position: 'absolute',
-                  bottom: '8px',
-                  right: '8px',
-                  backgroundColor: '#3B82F6',
-                  color: 'white',
-                  padding: '8px',
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Camera size={16} />
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleProfilePictureUpload}
-                    style={{ display: 'none' }}
-                  />
-                </label>
+              </label>
+            </div>
+          </div>
+
+          <div className="profile-details">
+            <div className="profile-basic-info">
+              <h1>{user.name}</h1>
+              <p className="membership-type">{user.membershipType} Member</p>
+              <div className="profile-meta">
+                <div className="meta-item">
+                  <Mail size={16} />
+                  <span>{user.email}</span>
+                </div>
+                <div className="meta-item">
+                  <Calendar size={16} />
+                  <span>Joined {new Date(user.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                </div>
               </div>
             </div>
-
-            {/* Profile Info */}
-            <div style={{ flex: 1 }}>
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center',
-                marginBottom: '16px'
-              }}>
-                <div>
-                  <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#1F2937', margin: 0 }}>
-                    {user.name}
-                  </h1>
-                  <p style={{ color: '#6B7280', margin: '4px 0' }}>
-                    {user.membershipType} Member
-                  </p>
-                  <div style={{ 
-                    display: 'flex', 
-                    gap: '16px', 
-                    marginTop: '12px',
-                    fontSize: '14px',
-                    color: '#6B7280'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Mail size={16} />
-                      {user.email}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Calendar size={16} />
-                      Joined {new Date(user.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                    </div>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => setIsEditing(!isEditing)}
-                  style={{
-                    backgroundColor: '#3B82F6',
-                    color: 'white',
-                    padding: '8px 24px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '16px'
-                  }}
-                >
-                  <Edit3 size={16} />
-                  {isEditing ? 'Cancel' : 'Edit Profile'}
-                </button>
-              </div>
+            <div className="profile-actions">
+              <button 
+                className={`btn-primary ${isEditing ? 'btn-cancel' : ''}`}
+                onClick={() => {
+                  if (isEditing) {
+                    setEditForm(user); // Reset form
+                  }
+                  setIsEditing(!isEditing);
+                }}
+              >
+                {isEditing ? <X size={16} /> : <Edit3 size={16} />}
+                {isEditing ? 'Cancel' : 'Edit Profile'}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Fitness Stats */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '16px', 
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-        padding: '32px',
-        marginBottom: '32px'
-      }}>
-        <h2 style={{ 
-          fontSize: '24px', 
-          fontWeight: 'bold', 
-          color: '#1F2937', 
-          marginBottom: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}>
-          <TrendingUp size={24} style={{ color: '#3B82F6' }} />
-          Fitness Stats
-        </h2>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '24px' 
-        }}>
-          {fitnessStats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div key={index} style={{ 
-                backgroundColor: '#F9FAFB',
-                borderRadius: '12px',
-                padding: '24px',
-                border: '1px solid #E5E7EB'
-              }}>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between' 
-                }}>
-                  <div style={{ 
-                    backgroundColor: stat.color,
-                    color: 'white',
-                    padding: '12px',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <Icon size={24} />
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ 
-                      fontSize: '32px', 
-                      fontWeight: 'bold', 
-                      color: '#1F2937',
-                      margin: 0
-                    }}>
-                      {stat.value}
-                    </p>
-                    <p style={{ 
-                      fontSize: '14px', 
-                      color: '#6B7280',
-                      margin: 0
-                    }}>
-                      {stat.label}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Personal Information */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '16px', 
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-        padding: '32px'
-      }}>
-        <h2 style={{ 
-          fontSize: '24px', 
-          fontWeight: 'bold', 
-          color: '#1F2937', 
-          marginBottom: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}>
-          <Trophy size={24} style={{ color: '#3B82F6' }} />
-          Personal Information
-        </h2>
-        
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
-          gap: '24px' 
-        }}>
-          {/* Basic Info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div>
-              <label style={{ 
-                display: 'block', 
-                fontSize: '14px', 
-                fontWeight: '500', 
-                color: '#374151',
-                marginBottom: '8px'
-              }}>
-                Full Name
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editForm.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              ) : (
-                <p style={{ 
-                  color: '#1F2937',
-                  backgroundColor: '#F9FAFB',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  margin: 0
-                }}>
-                  {user.name}
-                </p>
-              )}
-            </div>
-            
-            <div>
-              <label style={{ 
-                display: 'block', 
-                fontSize: '14px', 
-                fontWeight: '500', 
-                color: '#374151',
-                marginBottom: '8px'
-              }}>
-                Email
-              </label>
-              {isEditing ? (
-                <input
-                  type="email"
-                  value={editForm.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              ) : (
-                <p style={{ 
-                  color: '#1F2937',
-                  backgroundColor: '#F9FAFB',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  margin: 0
-                }}>
-                  {user.email}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label style={{ 
-                display: 'block', 
-                fontSize: '14px', 
-                fontWeight: '500', 
-                color: '#374151',
-                marginBottom: '8px'
-              }}>
-                Emergency Contact
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editForm.emergencyContact}
-                  onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              ) : (
-                <p style={{ 
-                  color: '#1F2937',
-                  backgroundColor: '#F9FAFB',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  margin: 0
-                }}>
-                  {user.emergencyContact}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Fitness Info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div>
-              <label style={{ 
-                display: 'block', 
-                fontSize: '14px', 
-                fontWeight: '500', 
-                color: '#374151',
-                marginBottom: '8px'
-              }}>
-                Fitness Level
-              </label>
-              {isEditing ? (
-                <select
-                  value={editForm.fitnessLevel}
-                  onChange={(e) => handleInputChange('fitnessLevel', e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                  <option value="Expert">Expert</option>
-                </select>
-              ) : (
-                <p style={{ 
-                  color: '#1F2937',
-                  backgroundColor: '#F9FAFB',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  margin: 0
-                }}>
-                  {user.fitnessLevel}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label style={{ 
-                display: 'block', 
-                fontSize: '14px', 
-                fontWeight: '500', 
-                color: '#374151',
-                marginBottom: '8px'
-              }}>
-                Primary Goal
-              </label>
-              {isEditing ? (
-                <select
-                  value={editForm.goals}
-                  onChange={(e) => handleInputChange('goals', e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  <option value="Build Muscle">Build Muscle</option>
-                  <option value="Lose Weight">Lose Weight</option>
-                  <option value="Improve Endurance">Improve Endurance</option>
-                  <option value="General Fitness">General Fitness</option>
-                  <option value="Strength Training">Strength Training</option>
-                </select>
-              ) : (
-                <p style={{ 
-                  color: '#1F2937',
-                  backgroundColor: '#F9FAFB',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  margin: 0
-                }}>
-                  {user.goals}
-                </p>
-              )}
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  fontSize: '14px', 
-                  fontWeight: '500', 
-                  color: '#374151',
-                  marginBottom: '8px'
-                }}>
-                  Height
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editForm.height}
-                    onChange={(e) => handleInputChange('height', e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                ) : (
-                  <p style={{ 
-                    color: '#1F2937',
-                    backgroundColor: '#F9FAFB',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                    margin: 0
-                  }}>
-                    {user.height}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  fontSize: '14px', 
-                  fontWeight: '500', 
-                  color: '#374151',
-                  marginBottom: '8px'
-                }}>
-                  Weight
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editForm.weight}
-                    onChange={(e) => handleInputChange('weight', e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                ) : (
-                  <p style={{ 
-                    color: '#1F2937',
-                    backgroundColor: '#F9FAFB',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                    margin: 0
-                  }}>
-                    {user.weight}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Profile Content */}
+      <div className="profile-content">
+        {/* Navigation Tabs */}
+        <div className="profile-tabs">
+          <button 
+            className={`tab-button ${activeTab === 'personal' ? 'active' : ''}`}
+            onClick={() => setActiveTab('personal')}
+          >
+            <User size={20} />
+            Personal Info
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'fitness' ? 'active' : ''}`}
+            onClick={() => setActiveTab('fitness')}
+          >
+            <Heart size={20} />
+            Fitness & Health
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'security' ? 'active' : ''}`}
+            onClick={() => setActiveTab('security')}
+          >
+            <Lock size={20} />
+            Security
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'notifications' ? 'active' : ''}`}
+            onClick={() => setActiveTab('notifications')}
+          >
+            <Bell size={20} />
+            Notifications
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'privacy' ? 'active' : ''}`}
+            onClick={() => setActiveTab('privacy')}
+          >
+            <Shield size={20} />
+            Privacy
+          </button>
         </div>
 
+        {/* Tab Content */}
+        <div className="tab-content-container">
+          {renderTabContent()}
+        </div>
+
+        {/* Save Button */}
         {isEditing && (
-          <div style={{ 
-            marginTop: '32px', 
-            display: 'flex', 
-            justifyContent: 'flex-end', 
-            gap: '16px' 
-          }}>
-            <button
-              onClick={() => setIsEditing(false)}
-              style={{
-                padding: '8px 24px',
-                border: '1px solid #D1D5DB',
-                color: '#374151',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                backgroundColor: 'white',
-                fontSize: '16px'
-              }}
-            >
+          <div className="save-actions">
+            <button className="btn-secondary" onClick={() => setIsEditing(false)}>
               Cancel
             </button>
-            <button
-              onClick={handleSaveProfile}
-              style={{
-                padding: '8px 24px',
-                backgroundColor: '#3B82F6',
-                color: 'white',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
+            <button className="btn-primary" onClick={handleSaveProfile}>
+              <Save size={16} />
               Save Changes
             </button>
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        
-        button:hover {
-          opacity: 0.9;
-        }
-        
-        input:focus, select:focus {
-          outline: none;
-          border-color: #3B82F6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        @media (max-width: 768px) {
-          .profile-header {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-          }
-        }
-      `}</style>
     </div>
   );
 };

@@ -3,14 +3,16 @@ const mongoose = require('mongoose');
 
 const workoutLogSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
-    ref: 'User'
+    index: true
   },
   category: {
     type: String,
-    required: true,
-    enum: ['Chest & Upper Body', 'Cardio & HIIT', 'Abs & Core', 'Legs & Glutes', 'Back & Shoulders', 'Yoga & Flexibility']
+    required: true
+  },
+  workoutName: {
+    type: String
   },
   duration: {
     type: Number,
@@ -23,42 +25,27 @@ const workoutLogSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  scheduledWorkoutId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Schedule'
+  },
+  exercises: [{
+    name: String,
+    sets: Number,
+    reps: Number,
+    weight: Number,
+    duration: Number // for time-based exercises
+  }],
+  notes: {
+    type: String,
+    maxLength: 500
   }
 }, {
   timestamps: true
 });
+
+// Index for efficient queries
+workoutLogSchema.index({ userId: 1, date: -1 });
 
 module.exports = mongoose.model('WorkoutLog', workoutLogSchema);
-
-// models/Schedule.js
-const mongoose = require('mongoose');
-
-const scheduleSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ['Chest & Upper Body', 'Cardio & HIIT', 'Abs & Core', 'Legs & Glutes', 'Back & Shoulders', 'Yoga & Flexibility']
-  },
-  trainer: {
-    type: String,
-    default: null
-  },
-  dateTime: {
-    type: Date,
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ['scheduled', 'completed', 'cancelled'],
-    default: 'scheduled'
-  }
-}, {
-  timestamps: true
-});
-
-module.exports = mongoose.model('Schedule', scheduleSchema);

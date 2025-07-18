@@ -29,6 +29,7 @@ import {
   Mic,
   MicOff
 } from 'lucide-react';
+import apiService from '../services/api';
 
 const GymFeatures = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -45,6 +46,11 @@ const GymFeatures = () => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
+  const [caloriesBurned, setCaloriesBurned] = useState(null);
+
+
+  // Add userId (replace with real user logic if available)
+  const userId = 'user123';
 
   useEffect(() => {
     setIsVisible(true);
@@ -164,7 +170,7 @@ const GymFeatures = () => {
     }
   };
 
-  const handleNextExercise = () => {
+  const handleNextExercise = async () => {
     if (currentExerciseIndex < getWorkoutExercises().length - 1) {
       setCurrentExerciseIndex(prev => prev + 1);
       setCurrentSet(1);
@@ -178,8 +184,31 @@ const GymFeatures = () => {
       setWorkoutActive(false);
       speak('Workout complete! Great job!');
       playSound('complete');
+  
+      try {
+        const category = selectedWorkout.category || selectedWorkout.id?.split('-')[0];
+
+console.log("selectedWorkout", selectedWorkout);
+
+const response = await apiService.logWorkout({
+  userId,
+  category,
+  duration: parseInt( selectedWorkout.duration),
+  workoutName: selectedWorkout.name,
+});
+
+       
+        if (response?.workoutLog?.caloriesBurned) {
+          setCaloriesBurned(response.workoutLog.caloriesBurned);
+        }
+  
+        console.log('Workout successfully logged!');
+      } catch (error) {
+        console.error('Error logging workout:', error);
+      }
     }
   };
+  
 
   const getCurrentExercise = () => {
     return getWorkoutExercises()[currentExerciseIndex];
@@ -1009,7 +1038,9 @@ const GymFeatures = () => {
           <div style={styles.statLabel}>Duration</div>
         </div>
         <div style={styles.statCard}>
-          <div style={styles.statValue}>{selectedWorkout.calories}</div>
+    <div style={styles.statValue}>
+      {caloriesBurned !== null ? caloriesBurned : selectedWorkout.calories}
+    </div>
           <div style={styles.statLabel}>Calories</div>
         </div>
       </div>
@@ -1189,20 +1220,31 @@ const GymFeatures = () => {
         isOpen={isWorkoutModalOpen}
         onClose={() => setIsWorkoutModalOpen(false)}
         onStartNow={() => {
-          // Call your existing startWorkout function
           startWorkout();
           console.log('Starting workout immediately');
         }}
-        onScheduleLater={(scheduleData) => {
-          // Handle scheduling logic
-          console.log('Scheduling workout for:', scheduleData);
-          console.log('Date:', scheduleData.date);
-          console.log('Time:', scheduleData.time);
-          console.log('DateTime object:', scheduleData.datetime);
-          
-          // You can add your backend API call here later
-          // For now, just log the scheduling data
-          alert(`Workout scheduled for ${scheduleData.date} at ${scheduleData.time}`);
+        onScheduleLater={async (scheduleData) => {
+          // scheduleData: { date, time, datetime }
+          if (!selectedWorkout) return;
+          try {
+            const response = await apiService.scheduleWorkout({
+              userId: userId,
+              type: selectedWorkout.name,
+              trainer: selectedWorkout.trainer || 'Self-guided',
+              dateTime: scheduleData.datetime.toISOString(),
+              category: selectedCategory?.name || '',
+              duration: parseInt(selectedWorkout.duration) || 30
+            });
+            if (response && response.schedule) {
+              setIsWorkoutModalOpen(false);
+              if (window.refreshOverview) window.refreshOverview();
+              alert('Workout scheduled successfully!');
+            } else {
+              alert('Failed to schedule workout. Please try again.');
+            }
+          } catch (error) {
+            alert('Error scheduling workout. Please try again.');
+          }
         }}
       />
 

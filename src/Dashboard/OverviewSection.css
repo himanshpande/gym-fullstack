@@ -1,622 +1,385 @@
-/* Fitness Overview Section Styles */
-
-.content-header {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.main-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-}
-
-.main-subtitle {
-  font-size: 1.125rem;
-  color: #6b7280;
+/* Reset and Base Styles */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.dashboard-section {
-  background: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f3f4f6;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 1.5rem;
-}
-
-.section-emoji {
-  font-size: 1.5rem;
-}
-
-/* Workout Summary Section */
-.workout-summary {
+.app {
+  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.workout-summary .section-title {
-  color: white;
-}
-
-.summary-card {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
+/* Header Styles */
+.header {
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.summary-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.workout-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.workout-type {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.workout-type .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.workout-stats {
-  display: flex;
-  gap: 2rem;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-}
-
-.stat-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  opacity: 0.8;
-}
-
-.weekly-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.progress-bar {
-  height: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 0.25rem;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #34d399);
-  border-radius: 0.25rem;
-  transition: width 0.3s ease;
-}
-
-/* Schedule Section */
-.schedule-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.schedule-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.schedule-item:hover {
-  background: #f3f4f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.schedule-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.schedule-type {
-  font-weight: 600;
-  color: #1f2937;
-  font-size: 1rem;
-}
-
-.schedule-details {
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-.time {
-  font-weight: 500;
-  color: #3b82f6;
-}
-
-.instructor {
-  font-size: 0.75rem;
-  color: #9ca3af;
-}
-
-.chevron-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #9ca3af;
-}
-
-/* Dashboard Row for side-by-side sections */
-.dashboard-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-/* Progress Section */
-.progress-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1rem;
-}
-
-.progress-item {
-  text-align: center;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-}
-
-.progress-label {
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.progress-value {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.25rem;
-}
-
-.progress-change {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.progress-change.positive {
-  color: #10b981;
-}
-
-.progress-change.negative {
-  color: #ef4444;
-}
-
-/* Goal Section */
-.goal-card {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  color: white;
-}
-
-.goal-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.goal-progress-bar {
-  height: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 0.25rem;
-  overflow: hidden;
-  margin-bottom: 0.75rem;
-}
-
-.goal-progress-fill {
-  height: 100%;
-  background: white;
-  border-radius: 0.25rem;
-  transition: width 0.3s ease;
-}
-
-.goal-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.goal-percentage {
-  font-weight: 600;
-}
-
-.goal-days {
-  opacity: 0.8;
-}
-
-/* Activities Section */
-.activities-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.activity-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.activity-item:hover {
-  background: #f3f4f6;
-  transform: translateY(-1px);
-}
-
-.activity-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.activity-icon .icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.activity-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.activity-name {
-  font-weight: 600;
-  color: #1f2937;
-}
-
-.activity-details {
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-/* Motivation Section */
-.motivation-section {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
-}
-
-.motivation-section .section-title {
-  color: white;
-}
-
-.motivation-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  backdrop-filter: blur(10px);
-}
-
-.motivation-icon {
-  width: 3rem;
-  height: 3rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.motivation-icon .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.motivation-text {
-  font-size: 1.125rem;
-  font-weight: 500;
+.header-container {
+  width: 100%;
+  max-width: none;
   margin: 0;
-  line-height: 1.5;
+  padding: 0 2rem;
 }
 
-/* Animations */
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Loading and Error States */
-.loading-container {
+.header-content {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  min-height: 400px;
-  padding: 2rem;
+  height: 70px;
 }
 
-.loading-spinner {
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.user-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 1rem;
-  color: #6b7280;
 }
 
-.loading-icon {
-  width: 2rem;
-  height: 2rem;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.error-container {
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 400px;
-  padding: 2rem;
-}
-
-.error-content {
-  text-align: center;
-  max-width: 400px;
-}
-
-.error-message {
-  color: #ef4444;
-  font-size: 1.125rem;
-  margin-bottom: 1rem;
-}
-
-.retry-button {
-  background: #3b82f6;
+  justify-content: center;
   color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.user-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Main Content */
+.main {
+  padding: 2rem;
+  min-height: calc(100vh - 70px);
+  width: 100%;
+}
+
+.dashboard-container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: none;
+}
+
+/* Overview Section */
+.overview-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: none;
+}
+
+.overview-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.overview-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+}
+
+.overview-section p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #4a5568;
+  padding: 0.8rem 1rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
   transition: background 0.3s ease;
 }
 
-.retry-button:hover {
-  background: #2563eb;
+.overview-section p:hover {
+  background: rgba(102, 126, 234, 0.15);
+}
+
+/* Overview Card */
+.overview-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: none;
+}
+
+.overview-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.overview-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.overview-icon {
+  width: 24px;
+  height: 24px;
+  color: #667eea;
+}
+
+/* Scheduled Workouts */
+.scheduled-workouts {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.scheduled-workout-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+.scheduled-workout-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateX(5px);
+}
+
+.workout-content {
+  flex: 1;
+}
+
+.workout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.workout-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.workout-category {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.workout-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.meta-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.workout-duration {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.duration-text {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.time-until {
+  font-size: 0.9rem;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.cancel-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6b7280;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  color: #d1d5db;
+}
+
+.empty-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+}
+
+.empty-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* Loading Skeleton */
+.loading-skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-header {
+  height: 2rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-item {
+  height: 1.5rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .main-title {
-    font-size: 2rem;
-  }
-  
-  .dashboard-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .dashboard-section {
+  .main {
     padding: 1rem;
   }
   
-  .workout-stats {
+  .header-container {
+    padding: 0 1rem;
+  }
+  
+  .overview-section,
+  .overview-card {
+    padding: 1.5rem;
+  }
+  
+  .scheduled-workout-item {
     flex-direction: column;
+    align-items: flex-start;
     gap: 1rem;
   }
   
-  .progress-grid {
-    grid-template-columns: 1fr;
+  .workout-duration {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 1rem;
   }
   
-  .motivation-card {
+  .workout-meta {
     flex-direction: column;
-    text-align: center;
+    gap: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .main-title {
-    font-size: 1.75rem;
+  .overview-section h2 {
+    font-size: 1.3rem;
   }
   
-  .section-title {
-    font-size: 1.25rem;
+  .overview-section p {
+    font-size: 1rem;
   }
   
-  .summary-main {
-    gap: 1rem;
+  .overview-title {
+    font-size: 1.2rem;
   }
   
-  .schedule-item {
-    padding: 0.75rem;
+  .workout-name {
+    font-size: 1rem;
   }
-  
-  .activity-item {
-    padding: 0.75rem;
-  }
-  /* Loading State */
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  padding: 2rem;
-}
-
-.loading-spinner {
-  font-size: 1.2rem;
-  color: #6b7280;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* Error State */
-.error-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  padding: 2rem;
-}
-
-.error-message {
-  text-align: center;
-  padding: 2rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 12px;
-  max-width: 400px;
-}
-
-.error-message h3 {
-  color: #dc2626;
-  margin-bottom: 0.5rem;
-}
-
-.error-message p {
-  color: #6b7280;
-  margin-bottom: 1rem;
-}
-
-.retry-button {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
-}
-
-.retry-button:hover {
-  background: #2563eb;
-}
-
-/* No Data State */
-.no-data-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  padding: 2rem;
-}
-
-.no-data-message {
-  text-align: center;
-  padding: 2rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  max-width: 400px;
-}
-
-.no-data-message h3 {
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-}
-
-.no-data-message p {
-  color: #6b7280;
-}
-
-/* No workout/schedule/activities messages */
-.no-workout-message,
-.no-schedule-message,
-.no-activities-message {
-  text-align: center;
-  padding: 2rem;
-  color: #6b7280;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px dashed #d1d5db;
-}
-
-.no-workout-message p,
-.no-schedule-message p,
-.no-activities-message p {
-  margin: 0;
-  font-size: 0.95rem;
-}
 }

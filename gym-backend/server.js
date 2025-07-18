@@ -7,12 +7,23 @@ const multer = require('multer');
 const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const workoutRoutes = require('./routes/workout');
+const statsRoutes = require('./routes/statsRoutes');
+
+// Import payment routes
+const paymentRoutes = require('./routes/payment');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+
+// Payment routes
+app.use('/api/payment', paymentRoutes);
+app.use('/api/workout', workoutRoutes);
+app.use('/api', statsRoutes);
+
 
 // Enhanced user schema with additional profile fields
 const userSchema = new mongoose.Schema({

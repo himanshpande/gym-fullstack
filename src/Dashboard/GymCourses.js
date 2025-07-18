@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react"
 import AOS from "aos"
 import "aos/dist/aos.css"
-import { ShoppingCart, Plus, X, CreditCard, Dumbbell, Heart, Zap, Target, Star, Users, Clock } from "lucide-react"
+import { 
+  ShoppingCart, Plus, X, CreditCard, Dumbbell, Heart, Zap, Target, Star, Users, Clock,
+  ArrowLeft, CheckCircle, XCircle, Smartphone, Lock, Shield, Info, QrCode
+} from "lucide-react"
 import CourseDetailsModal from "./course-details-modal.jsx"
 import "./GymCourses.css"
 
@@ -16,15 +19,30 @@ const GymCourses = () => {
   const [showCartSidebar, setShowCartSidebar] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [showCourseDetails, setShowCourseDetails] = useState(false)
+  const [currentView, setCurrentView] = useState('courses') // 'courses' or 'payment'
+  const [paymentData, setPaymentData] = useState({
+    selectedPaymentMethod: 'googlepay',
+    isProcessing: false,
+    paymentStatus: null,
+    customerInfo: {
+      name: '',
+      email: '',
+      phone: '',
+      address: ''
+    }
+  })
+
+  const GOOGLE_PAY_UPI_ID = 'vp1246194@okhdfcbank' // Replace with your business UPI ID
+  const GOOGLE_PAY_MERCHANT_NAME = 'Vineet Pandey'
+  const MERCHANT_UPI_ID = 'vp1246194@okhdfcbank'
 
   const courses = [
     {
       id: 1,
-      
       name: "Strength Training Mastery",
       description:
         "Master the fundamentals of strength training with progressive overload techniques and proper form guidance.",
-      price: "1199",
+      price: "1",
       originalPrice: "1499",
       image: "https://149874912.v2.pressablecdn.com/wp-content/uploads/2022/11/Strength-training-programs.jpg",
       category: "Strength",
@@ -71,7 +89,7 @@ const GymCourses = () => {
     {
       id: 4,
       name: "HIIT Challenge Elite",
-      description: "https://tse2.mm.bing.net/th/id/OIP.mijMSBX2fxIbSYqZtEXtUQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Push your limits with high-intensity interval training designed for maximum fat burn and fitness gains.",
       price: "1299",
       originalPrice: "1599",
       image: "https://tse2.mm.bing.net/th/id/OIP.mijMSBX2fxIbSYqZtEXtUQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
@@ -227,10 +245,13 @@ const GymCourses = () => {
 
   const closeCart = () => setShowCartSidebar(false)
 
-  const handleBuy = () => {
-    alert("Thank you for your purchase!")
-    setCart([])
+  const handleCheckout = () => {
     setShowCartSidebar(false)
+    setCurrentView('payment')
+  }
+
+  const handleBackToCart = () => {
+    setCurrentView('courses')
   }
 
   const openCourseDetails = (course) => {
@@ -256,6 +277,462 @@ const GymCourses = () => {
     ))
   }
 
+  // Payment Functions
+  const generateQRCode = (amount, upiId, merchantName) => {
+    const upiString = `upi://pay?pa=${upiId}&pn=${merchantName}&am=${amount}&cu=INR&tn=Gym%20Courses%20Payment`;
+    
+    // Using QR Server API for generating QR code
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
+    
+    return (
+      <div className="qr-container">
+        <div className="qr-header">
+          <h3>Scan QR Code to Pay</h3>
+          <p>Use any UPI app (GPay, PhonePe, Paytm, etc.)</p>
+        </div>
+        
+        <div className="qr-code-wrapper">
+          <img 
+            src={qrCodeUrl} 
+            alt="Payment QR Code" 
+            className="qr-code-image"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'block';
+            }}
+          />
+          <div className="qr-fallback">
+            <div className="qr-fallback-content">
+              <QrCode size={48} className="qr-icon" />
+              <div className="qr-fallback-text">QR Code</div>
+              <div className="qr-fallback-subtext">Scan with any UPI app</div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="qr-details">
+          <div className="merchant-info">
+            <div className="merchant-name">{merchantName}</div>
+          </div>
+          <div className="upi-id">UPI ID: {upiId}</div>
+          <div className="amount">Amount: ₹{amount}</div>
+        </div>
+        
+        <div className="qr-buttons">
+          <button 
+            onClick={() => {
+              if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                window.location.href = upiString;
+              }
+            }}
+            className="open-upi-btn"
+          >
+            Open UPI App
+          </button>
+          <button 
+            onClick={() => {
+              navigator.clipboard.writeText(upiId);
+              alert('UPI ID copied to clipboard!');
+            }}
+            className="copy-upi-btn"
+          >
+            Copy UPI ID
+          </button>
+        </div>
+        
+        <div className="qr-instructions">
+          <div className="instructions-title">Steps:</div>
+          <div className="instructions-list">
+            1. Open any UPI app<br/>
+            2. Scan this QR code<br/>
+            3. Verify amount and pay<br/>
+            4. Screenshot payment confirmation
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const initializeGooglePayPayment = async () => {
+    const finalAmount = total + Math.round(total * 0.18);
+    
+    const upiUrl = `upi://pay?pa=${GOOGLE_PAY_UPI_ID}&pn=${GOOGLE_PAY_MERCHANT_NAME}&am=${finalAmount}&cu=INR&tn=Gym%20Courses%20Payment`;
+    
+    const qrData = {
+      amount: finalAmount,
+      upiId: GOOGLE_PAY_UPI_ID,
+      merchantName: GOOGLE_PAY_MERCHANT_NAME,
+      transactionNote: `Gym Courses Payment - ${cart.length} courses`
+    };
+    
+    setPaymentData(prev => ({ 
+      ...prev, 
+      paymentStatus: 'qr_display',
+      qrData: qrData
+    }));
+    
+    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      try {
+        window.location.href = upiUrl;
+      } catch (error) {
+        console.log('Could not open UPI app directly, showing QR code');
+      }
+    }
+  };
+
+  const handleUPIPayment = () => {
+    const finalAmount = total + Math.round(total * 0.18);
+    
+    setPaymentData(prev => ({ 
+      ...prev, 
+      isProcessing: true, 
+      paymentStatus: 'upi_initiated' 
+    }));
+    
+    setTimeout(() => {
+      setPaymentData(prev => ({ 
+        ...prev, 
+        isProcessing: false, 
+        paymentStatus: 'upi_display',
+        qrData: {
+          amount: finalAmount,
+          upiId: MERCHANT_UPI_ID,
+          merchantName: GOOGLE_PAY_MERCHANT_NAME
+        }
+      }));
+    }, 1000);
+  };
+
+  const handleGooglePayPayment = () => {
+    setPaymentData(prev => ({ 
+      ...prev, 
+      isProcessing: true, 
+      paymentStatus: 'processing' 
+    }));
+    
+    setTimeout(() => {
+      initializeGooglePayPayment();
+    }, 1000);
+  };
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    
+    if (!paymentData.customerInfo.name || !paymentData.customerInfo.email || !paymentData.customerInfo.phone) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    setPaymentData(prev => ({ ...prev, isProcessing: true }));
+
+    try {
+      switch (paymentData.selectedPaymentMethod) {
+        case 'googlepay':
+          await initializeGooglePayPayment();
+          break;
+        case 'upi':
+          handleUPIPayment();
+          break;
+        default:
+          throw new Error('Invalid payment method');
+      }
+    } catch (error) {
+      console.error('Payment failed:', error);
+      setPaymentData(prev => ({ 
+        ...prev, 
+        isProcessing: false, 
+        paymentStatus: 'failed' 
+      }));
+      alert('Payment failed. Please try again.');
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPaymentData(prev => ({
+      ...prev,
+      customerInfo: {
+        ...prev.customerInfo,
+        [name]: value
+      }
+    }));
+  };
+
+  const handlePaymentMethodChange = (method) => {
+    setPaymentData(prev => ({ ...prev, selectedPaymentMethod: method }));
+  };
+
+  const handlePaymentSuccess = () => {
+    setPaymentData(prev => ({ 
+      ...prev, 
+      paymentStatus: 'success' 
+    }));
+    setTimeout(() => {
+      setCart([]);
+      setCurrentView('courses');
+      setPaymentData(prev => ({ 
+        ...prev, 
+        paymentStatus: null 
+      }));
+    }, 3000);
+  };
+
+  // Payment View
+  if (currentView === 'payment') {
+    const finalTotal = total + Math.round(total * 0.18);
+    
+    return (
+      <div className="payment-container">
+        <div className="payment-header">
+          <button 
+            className="back-button"
+            onClick={handleBackToCart}
+          >
+            <ArrowLeft size={20} />
+            Back to Cart
+          </button>
+          <h1>Secure Checkout</h1>
+          <div className="ssl-badge">
+            <Shield size={16} />
+            <span>SSL Secured</span>
+          </div>
+        </div>
+
+        <div className="payment-content">
+          {/* Order Summary */}
+          <div className="order-summary">
+            <h2>
+              <ShoppingCart size={20} />
+              Order Summary
+            </h2>
+            
+            <div className="order-items">
+              {cart.map((item) => (
+                <div key={item.id} className="order-item">
+                  <img src={item.image} alt={item.name} className="item-image" />
+                  <div className="item-details">
+                    <h4>{item.name}</h4>
+                    <p>{item.category} • {item.duration}</p>
+                  </div>
+                  <span className="item-price">₹{item.price}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="order-total">
+              <div className="total-line">
+                <span>Subtotal:</span>
+                <span>₹{total}</span>
+              </div>
+              <div className="total-line">
+                <span>GST (18%):</span>
+                <span>₹{Math.round(total * 0.18)}</span>
+              </div>
+              <div className="total-line final-total">
+                <span>Total:</span>
+                <span>₹{finalTotal}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Form */}
+          <div className="payment-form-container">
+            <h2>
+              <CreditCard size={20} />
+              Payment Details
+            </h2>
+
+            <form onSubmit={handlePayment}>
+              {/* Customer Information */}
+              <div className="customer-info">
+                <h3>Customer Information</h3>
+                
+                <div className="form-field">
+                  <label>Full Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={paymentData.customerInfo.name}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label>Email Address *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={paymentData.customerInfo.email}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label>Phone Number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={paymentData.customerInfo.phone}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label>Address</label>
+                  <textarea
+                    name="address"
+                    value={paymentData.customerInfo.address}
+                    onChange={handleInputChange}
+                    placeholder="Enter your address"
+                    rows="3"
+                  />
+                </div>
+              </div>
+
+              {/* Payment Method Selection */}
+              <div className="payment-methods">
+                <h3>Payment Method</h3>
+                
+                <div className="payment-method-options">
+                  <div 
+                    className={`payment-method ${paymentData.selectedPaymentMethod === 'googlepay' ? 'selected' : ''}`}
+                    onClick={() => handlePaymentMethodChange('googlepay')}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="googlepay"
+                      checked={paymentData.selectedPaymentMethod === 'googlepay'}
+                      onChange={() => handlePaymentMethodChange('googlepay')}
+                    />
+                    <div className="gpay-badge">
+                      G Pay
+                    </div>
+                    <div className="method-info">
+                      <strong>Google Pay</strong>
+                      <p>Pay with Google Pay app</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`payment-method ${paymentData.selectedPaymentMethod === 'upi' ? 'selected' : ''}`}
+                    onClick={() => handlePaymentMethodChange('upi')}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="upi"
+                      checked={paymentData.selectedPaymentMethod === 'upi'}
+                      onChange={() => handlePaymentMethodChange('upi')}
+                    />
+                    <Smartphone size={20} />
+                    <div className="method-info">
+                      <strong>UPI Direct</strong>
+                      <p>Pay with any UPI app</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Status */}
+              {paymentData.paymentStatus && (
+                <div className={`payment-status ${paymentData.paymentStatus}`}>
+                  {paymentData.paymentStatus === 'success' && (
+                    <>
+                      <CheckCircle size={20} />
+                      <span>Payment successful! Redirecting...</span>
+                    </>
+                  )}
+                  {paymentData.paymentStatus === 'failed' && (
+                    <>
+                      <XCircle size={20} />
+                      <span>Payment failed. Please try again.</span>
+                    </>
+                  )}
+                  {paymentData.paymentStatus === 'processing' && (
+                    <>
+                      <div className="spinner"></div>
+                      <span>Processing payment...</span>
+                    </>
+                  )}
+                  {paymentData.paymentStatus === 'upi_initiated' && (
+                    <>
+                      <Info size={20} />
+                      <span>Preparing UPI payment...</span>
+                    </>
+                  )}
+                  {(paymentData.paymentStatus === 'qr_display' || paymentData.paymentStatus === 'upi_display') && (
+                    <>
+                      <QrCode size={20} />
+                      <span>Scan QR code to complete payment</span>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* QR Code Display */}
+              {(paymentData.paymentStatus === 'qr_display' || paymentData.paymentStatus === 'upi_display') && paymentData.qrData && (
+                <div className="qr-display">
+                  {generateQRCode(paymentData.qrData.amount, paymentData.qrData.upiId, paymentData.qrData.merchantName)}
+                  
+                  <div className="payment-confirm-buttons">
+                    <button 
+                      type="button"
+                      onClick={handlePaymentSuccess}
+                      className="success-btn"
+                    >
+                      ✓ Payment Completed
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setPaymentData(prev => ({ ...prev, paymentStatus: 'failed' }))}
+                      className="failed-btn"
+                    >
+                      ✗ Payment Failed
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Pay Button */}
+              {(!paymentData.paymentStatus || paymentData.paymentStatus === 'failed') && (
+                <button 
+                  type="submit" 
+                  className={`pay-button ${paymentData.isProcessing ? 'processing' : ''}`}
+                  disabled={paymentData.isProcessing}
+                >
+                  {paymentData.isProcessing ? (
+                    <>
+                      <div className="spinner"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Lock size={16} />
+                      Pay ₹{finalTotal} Securely
+                    </>
+                  )}
+                </button>
+              )}
+            </form>
+
+            <div className="ssl-notice">
+              <Lock size={12} />
+              Your payment information is encrypted and secure. We use industry-standard SSL encryption to protect your data.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Original Courses View
   return (
     <div className="gym-container">
       {/* Header Section */}
@@ -323,7 +800,7 @@ const GymCourses = () => {
                     <div className="cart-total">
                       <span>Total: ₹{total}</span>
                     </div>
-                    <button className="checkout-btn" onClick={handleBuy}>
+                    <button className="checkout-btn" onClick={handleCheckout}>
                       <CreditCard size={20} />
                       Proceed to Checkout
                     </button>
@@ -350,60 +827,69 @@ const GymCourses = () => {
 
               <div className="course-content">
                 <div className="course-header">
-                  <div className="course-icon">
+                <div className="course-category">
                     <IconComponent size={16} />
+                    <span>{course.category}</span>
                   </div>
-                  <span className="course-category">{course.category}</span>
+                  <div className="course-level">{course.level}</div>
                 </div>
 
-                <h3 className="course-title" onClick={() => openCourseDetails(course)}>
-                  {course.name}
-                </h3>
+                <h3 className="course-title">{course.name}</h3>
                 <p className="course-description">{course.description}</p>
 
-                <div className="course-meta">
-                  <div className="course-stats">
-                    <span>
-                      <Clock size={12} />
-                      {course.duration}
-                    </span>
-                    <span>
-                      <Users size={12} />
-                      {course.students.toLocaleString()}
-                    </span>
+                <div className="course-stats">
+                  <div className="stat">
+                    <Users size={14} />
+                    <span>{course.students.toLocaleString()} students</span>
                   </div>
-
-                  <div className="course-rating">
-                    {renderStars(course.rating)}
-                    <span>({course.rating})</span>
+                  <div className="stat">
+                    <Clock size={14} />
+                    <span>{course.lessons} lessons</span>
+                  </div>
+                  <div className="stat">
+                    <div className="rating">
+                      {renderStars(course.rating)}
+                      <span className="rating-text">{course.rating}</span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="course-pricing">
-                  <span className="current-price">₹{course.price}</span>
-                  <span className="original-price">₹{course.originalPrice}</span>
-                  <span className="savings">
-                    Save ₹{Number.parseInt(course.originalPrice) - Number.parseInt(course.price)}
-                  </span>
+                  <div className="price-info">
+                    <span className="current-price">₹{course.price}</span>
+                    <span className="original-price">₹{course.originalPrice}</span>
+                  </div>
+                  <div className="duration-info">
+                    <Clock size={12} />
+                    <span>{course.duration}</span>
+                  </div>
                 </div>
 
-                <button
-                  className={`add-to-cart-btn ${isInCart ? "added" : ""}`}
-                  onClick={() => openCourseDetails(course)}
-                  disabled={isInCart}
-                >
-                  {isInCart ? (
-                    <>
-                      <ShoppingCart size={16} />
-                      Added to Cart
-                    </>
-                  ) : (
-                    <>
-                      <Plus size={16} />
-                      Add to Cart
-                    </>
-                  )}
-                </button>
+                <div className="course-actions">
+                  <button 
+                    className="details-btn"
+                    onClick={() => openCourseDetails(course)}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    className={`add-to-cart-btn ${isInCart ? 'in-cart' : ''}`}
+                    onClick={() => addToCart(course)}
+                    disabled={isInCart}
+                  >
+                    {isInCart ? (
+                      <>
+                        <CheckCircle size={16} />
+                        Added
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={16} />
+                        Add to Cart
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           )
@@ -411,7 +897,7 @@ const GymCourses = () => {
       </div>
 
       {/* Course Details Modal */}
-      {selectedCourse && (
+      {showCourseDetails && selectedCourse && (
         <CourseDetailsModal
           course={selectedCourse}
           isOpen={showCourseDetails}
@@ -424,4 +910,4 @@ const GymCourses = () => {
   )
 }
 
-export default GymCourses
+export default GymCourses;
