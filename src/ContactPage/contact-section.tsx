@@ -348,10 +348,12 @@ export default function GymContactSection() {
 
       <div className="container">
         <div className="header">
-          <h2 className="main-title">Reach Out to us</h2>
-          <p className="main-subtitle">
-            Ready to transform your body and mind? Join our fitness community today. Get in touch for membership
-            details, personal training, or any questions about our facilities.
+          <h2 className="main-title contact-gradient-title">
+            Reach Out to us
+            <span className="main-title-underline" />
+          </h2>
+          <p className="main-subtitle contact-subtitle">
+            Ready to transform your body and mind? <span className="highlight">Join our fitness community today.</span>
           </p>
         </div>
 

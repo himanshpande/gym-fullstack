@@ -1,7 +1,7 @@
 /* Main Section */
 .gym-contact-section {
     min-height: 100vh;
-    background: linear-gradient(135deg, #111827 0%, #000000 50%, #1f2937 100%);
+    background: linear-gradient(to right, #111, #222);
     padding: 80px 16px;
     position: relative;
     overflow: hidden;
@@ -24,7 +24,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at top, rgba(220, 38, 38, 0.2) 0%, transparent 50%);
+    background: linear-gradient(to right, #111, #222);
   }
   
   .bg-blur-left {
@@ -33,7 +33,7 @@
     left: 25%;
     width: 384px;
     height: 384px;
-    background: rgba(239, 68, 68, 0.1);
+    background: linear-gradient(to right, #111, #222);
     border-radius: 50%;
     filter: blur(96px);
   }
@@ -44,7 +44,7 @@
     right: 25%;
     width: 384px;
     height: 384px;
-    background: rgba(249, 115, 22, 0.1);
+    background: linear-gradient(to right, #111, #222);
     border-radius: 50%;
     filter: blur(96px);
   }
@@ -60,7 +60,8 @@
   /* Header */
   .header {
     text-align: center;
-    margin-bottom: 64px;
+    margin-bottom: 80px; /* Increased gap below header */
+    background: linear-gradient(to right, #111, #222);
   }
   
   .main-title {
@@ -68,7 +69,7 @@
     font-weight: bold;
     color: white;
     margin-bottom: 24px;
-    background: linear-gradient(to right, #ffffff, #d1d5db, #9ca3af);
+    /* background: linear-gradient(to right, #ffffff, #d1d5db, #9ca3af); */
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -101,7 +102,7 @@
   }
   
   .contact-card {
-    background: linear-gradient(135deg, rgba(31, 41, 55, 0.5), rgba(17, 24, 39, 0.5));
+    background: linear-gradient(to right, #111, #222);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(55, 65, 81, 0.5);
     border-radius: 16px;
@@ -196,7 +197,7 @@
   
   /* Features Card */
   .features-card {
-    background: linear-gradient(135deg, rgba(31, 41, 55, 0.3), rgba(17, 24, 39, 0.3));
+    background: linear-gradient(to right, #111, #222);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(55, 65, 81, 0.3);
     border-radius: 16px;
@@ -247,7 +248,7 @@
   
   /* Form Container - Fixed positioning */
   .form-container {
-    background: linear-gradient(135deg, rgba(31, 41, 55, 0.5), rgba(17, 24, 39, 0.5));
+   background: linear-gradient(to right, #111, #222);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(55, 65, 81, 0.5);
     border-radius: 16px;
@@ -296,11 +297,11 @@
   .form-input,
   .form-select {
     width: 100%;
-    background: rgba(31, 41, 55, 0.5);
+    /* background: linear-gradient(to right, #111, #222); */
     border: 1px solid rgba(75, 85, 99, 0.5);
     border-radius: 8px;
     padding: 16px 16px 16px 48px;
-    color: white;
+    color: black;
     font-size: 16px;
     outline: none;
     transition: border-color 0.3s ease;
@@ -308,12 +309,12 @@
   
   .form-input:focus,
   .form-select:focus {
-    border-color: #ef4444;
+    border-color: #00ffff;
   }
   
   .form-textarea {
     width: 100%;
-    background: rgba(31, 41, 55, 0.5);
+    background: linear-gradient(to right, #111, #222);
     border: 1px solid rgba(75, 85, 99, 0.5);
     border-radius: 8px;
     padding: 16px;
@@ -326,7 +327,7 @@
   }
   
   .form-textarea:focus {
-    border-color: #ef4444;
+    border-color: #00ffff;
   }
   
   .input-icon {
@@ -365,7 +366,7 @@
   /* Submit Button */
   .submit-button {
     width: 100%;
-    background: linear-gradient(to right, #dc2626, #ea580c);
+    background: linear-gradient(to right, #111, #222);
     color: white;
     font-weight: 600;
     padding: 16px 32px;
@@ -709,4 +710,73 @@
   .thank-you-details p {
     font-size: 0.9rem;
   }
+}
+
+.contact-gradient-title {
+  background: linear-gradient(90deg, #00d8ff 0%, #1e63f7 50%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 24px rgba(30, 99, 247, 0.15);
+  position: relative;
+  display: inline-block;
+}
+
+.main-title-underline {
+  display: block;
+  width: 80px;
+  height: 5px;
+  margin: 16px auto 0 auto;
+  background: linear-gradient(90deg, #00d8ff 0%, #764ba2 100%);
+  border-radius: 8px;
+  animation: underlinePulse 2s infinite alternate;
+}
+
+@keyframes underlinePulse {
+  0% { box-shadow: 0 0 8px #00d8ff44; }
+  100% { box-shadow: 0 0 24px #764ba244; }
+}
+
+.contact-subtitle {
+  font-size: 1.35rem;
+  color: #b0b0b0;
+  margin-top: 8px;
+  margin-bottom: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.highlight {
+  color: #00d8ff;
+  font-weight: 600;
+  background: linear-gradient(90deg, #00d8ff 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-select {
+  width: 100%;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 16px 16px 16px 48px;
+  color: #222;
+  font-size: 16px;
+  background: linear-gradient(to right, #fff, #f3f4f6) padding-box, linear-gradient(90deg, #00d8ff 0%, #764ba2 100%) border-box;
+  box-shadow: 0 2px 12px rgba(0,216,255,0.08);
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  appearance: none;
+  position: relative;
+  z-index: 1;
+}
+
+.form-select:focus, .form-select:hover {
+  border: 2px solid #00d8ff;
+  box-shadow: 0 0 0 3px rgba(0,216,255,0.15);
+  background: linear-gradient(to right, #fff, #e0e7ff) padding-box, linear-gradient(90deg, #00d8ff 0%, #764ba2 100%) border-box;
+}
+
+.form-select option {
+  background: #fff;
+  color: #222;
 }

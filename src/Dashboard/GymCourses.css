@@ -40,11 +40,9 @@ body {
 }
 
 .main-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  
   font-weight: 800;
-  background: linear-gradient(135deg, #00d8ff, #00bfff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: white;
   background-clip: text;
   margin-bottom: 1rem;
   line-height: 1.2;
