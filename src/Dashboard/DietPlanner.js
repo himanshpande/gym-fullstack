@@ -1,6 +1,8 @@
 // diet-planner.js
 import React, { useState } from 'react';
 import './Diet.css';
+import { User, Mail, Calendar, Dumbbell, Star, CheckCircle, X, HeartPulse, Apple, ChevronRight } from "lucide-react"
+import "./DietPlannerModern.css"
 
 const GymDietPlanner = () => {
   const [currentStep, setCurrentStep] = useState('form');
@@ -293,113 +295,126 @@ const GymDietPlanner = () => {
 
   if (currentStep === 'form') {
     return (
-      <div className="diet-planner">
-        <div className="container">
-          <div className="header">
-            <h1 className="main-title">🏋️‍♂️ Personalized Diet Planner</h1>
-            <p className="subtitle">Get your customized weekly meal plan based on your fitness goals</p>
+      <section className="diet-modern-section">
+        <div className="background-effects">
+          <div className="bg-gradient-top"></div>
+          <div className="bg-blur-left"></div>
+          <div className="bg-blur-right"></div>
+          {/* Animated SVG shapes */}
+          <svg className="svg-shape svg-shape-1" width="180" height="180" viewBox="0 0 180 180" fill="none"><circle cx="90" cy="90" r="80" fill="url(#paint0_radial)" opacity="0.18"/><defs><radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientTransform="translate(90 90) scale(80)" gradientUnits="userSpaceOnUse"><stop stopColor="#8b5cf6"/><stop offset="1" stopColor="#3b82f6"/></radialGradient></defs></svg>
+          <svg className="svg-shape svg-shape-2" width="120" height="120" viewBox="0 0 120 120" fill="none"><rect x="10" y="10" width="100" height="100" rx="30" fill="#10b981" opacity="0.10"/></svg>
+        </div>
+        <div className="diet-modern-container">
+          <div className="modern-form-header">
+            <h1 className="modern-title">
+              <Dumbbell className="input-icon animated-icon" size={40} /> Personalized Diet Planner
+            </h1>
+            <div className="modern-title-underline">
+              <div className="modern-title-underline-pulse"></div>
+            </div>
+            <p className="modern-subtitle">
+              Get your <span className="gradient-text">customized weekly meal plan</span> based on your fitness goals
+            </p>
           </div>
-
-          <div className="form-container">
-            <div className="form-grid">
+          {/* Wavy SVG divider */}
+          <div className="svg-divider">
+            <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#fff" fillOpacity="0.08"/></svg>
+          </div>
+          <div className="modern-form-container floating-glow-card">
+            <div className="modern-form-grid">
               {/* Personal Information */}
-              <div className="form-section">
-                <div className="section-header">
-                  <span className="icon">👤</span>
-                  <h2>Personal Information</h2>
+              <div>
+                <div className="modern-section-title">
+                  <User className="input-icon animated-icon" /> Personal Information
                 </div>
-                
-                <div className="form-group">
-                  <label>Full Name</label>
+                <div className="input-group">
+                  <User className="input-icon animated-icon" />
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Enter your full name"
+                    placeholder="Full Name"
+                    className="animated-input"
                   />
                 </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Age</label>
-                    <input
-                      type="number"
-                      name="age"
-                      value={formData.age}
-                      onChange={handleInputChange}
-                      placeholder="Age"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Gender</label>
-                    <select
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
+                <div className="input-group">
+                  <Calendar className="input-icon animated-icon" />
+                  <input
+                    type="number"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleInputChange}
+                    placeholder="Age"
+                    className="animated-input"
+                  />
                 </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Weight (kg)</label>
-                    <input
-                      type="number"
-                      name="weight"
-                      value={formData.weight}
-                      onChange={handleInputChange}
-                      placeholder="Weight"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Height (cm)</label>
-                    <input
-                      type="number"
-                      name="height"
-                      value={formData.height}
-                      onChange={handleInputChange}
-                      placeholder="Height"
-                    />
-                  </div>
+                <div className="input-group">
+                  <Star className="input-icon animated-icon" />
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    className="animated-input"
+                  >
+                    <option value="">Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="input-group">
+                  <HeartPulse className="input-icon animated-icon" />
+                  <input
+                    type="number"
+                    name="weight"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                    placeholder="Weight (kg)"
+                    className="animated-input"
+                  />
+                </div>
+                <div className="input-group">
+                  <ChevronRight className="input-icon animated-icon" />
+                  <input
+                    type="number"
+                    name="height"
+                    value={formData.height}
+                    onChange={handleInputChange}
+                    placeholder="Height (cm)"
+                    className="animated-input"
+                  />
                 </div>
               </div>
-
               {/* Goals and Preferences */}
-              <div className="form-section">
-                <div className="section-header">
-                  <span className="icon">🎯</span>
-                  <h2>Goals & Preferences</h2>
+              <div>
+                <div className="modern-section-title">
+                  <Apple className="input-icon animated-icon" /> Goals & Preferences
                 </div>
-
-                <div className="form-group">
-                  <label>Primary Goal</label>
+                <div className="input-group">
+                  <Dumbbell className="input-icon animated-icon" />
                   <select
                     name="goal"
                     value={formData.goal}
                     onChange={handleInputChange}
+                    className="animated-input"
                   >
-                    <option value="">Select your goal</option>
+                    <option value="">Primary Goal</option>
                     <option value="weight-loss">Weight Loss</option>
                     <option value="muscle-gain">Muscle Gain</option>
                     <option value="maintenance">Maintain Current Weight</option>
                     <option value="athletic-performance">Athletic Performance</option>
                   </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Activity Level</label>
+                <div className="input-group">
+                  <Star className="input-icon animated-icon" />
                   <select
                     name="activityLevel"
                     value={formData.activityLevel}
                     onChange={handleInputChange}
+                    className="animated-input"
                   >
-                    <option value="">Select activity level</option>
+                    <option value="">Activity Level</option>
                     <option value="sedentary">Sedentary (little to no exercise)</option>
                     <option value="light">Light (light exercise 1-3 days/week)</option>
                     <option value="moderate">Moderate (moderate exercise 3-5 days/week)</option>
@@ -407,15 +422,15 @@ const GymDietPlanner = () => {
                     <option value="very-high">Very High (very hard exercise, physical job)</option>
                   </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Dietary Restrictions</label>
+                <div className="input-group">
+                  <Apple className="input-icon animated-icon" />
                   <select
                     name="dietaryRestrictions"
                     value={formData.dietaryRestrictions}
                     onChange={handleInputChange}
+                    className="animated-input"
                   >
-                    <option value="">None</option>
+                    <option value="">Dietary Restrictions</option>
                     <option value="vegetarian">Vegetarian</option>
                     <option value="vegan">Vegan</option>
                     <option value="gluten-free">Gluten-Free</option>
@@ -423,32 +438,36 @@ const GymDietPlanner = () => {
                     <option value="keto">Keto</option>
                   </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Medical Conditions (Optional)</label>
+                <div className="input-group">
+                  <Mail className="input-icon animated-icon" />
                   <input
                     type="text"
                     name="medicalConditions"
                     value={formData.medicalConditions}
                     onChange={handleInputChange}
-                    placeholder="e.g., diabetes, hypertension"
+                    placeholder="Medical Conditions (Optional)"
+                    className="animated-input"
                   />
                 </div>
               </div>
             </div>
-
             <div className="form-submit">
               <button
                 onClick={generateDietPlan}
                 disabled={!isFormValid()}
-                className="submit-btn"
+                className="modern-submit-btn ripple-btn"
               >
-                Generate My Diet Plan 🎯
+                Generate My Diet Plan <ChevronRight className="input-icon animated-icon" />
               </button>
+            </div>
+            {/* Motivational CTA badge */}
+            <div className="modern-cta-badge">
+              <div className="modern-cta-pulse"></div>
+              <span>🚀 Start your transformation today!</span>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 

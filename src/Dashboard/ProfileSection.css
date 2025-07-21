@@ -1,6 +1,6 @@
 /* Profile Section Styles */
 .profile-container {
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 24px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -147,8 +147,11 @@
   }
   
   .profile-actions {
-    display: flex;
+   display: flex;
     gap: 12px;
+    position: relative;
+    top: 49px;
+    left: 67px;
   }
   
   /* Buttons */

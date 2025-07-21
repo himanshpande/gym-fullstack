@@ -60,10 +60,10 @@ const OverviewSection = ({ userId }: { userId: string }) => {
 
   return (
     <div className="overview-section">
-      <h2>📊 Weekly & Monthly Stats</h2>
+      <h2>Weekly & Monthly Stats</h2>
       <div>
         <p>🗓️ Workouts Planned This Week: {userStats?.week.workoutsPlanned ?? 'N/A'}</p>
-        <p>✅ Workouts Done This Month: {userStats?.month.workoutsDone ?? 'N/A' }</p>
+        <p> Workouts Done This Month: {userStats?.month.workoutsDone ?? 'N/A' }</p>
         <p>⏱️ Total Time Spent This Month: {userStats?.month.totalTime ?? 'N/A' } hrs</p>
       </div>
     </div>

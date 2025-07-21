@@ -1,0 +1,451 @@
+/* Modern Diet Planner Styles */
+.diet-modern-section {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+  position: relative;
+  padding: 60px 0;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+.background-effects {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+}
+.bg-gradient-top {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 300px;
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+  opacity: 0.25;
+}
+.bg-blur-left {
+  position: absolute;
+  top: 20%; left: 5%; width: 300px; height: 300px;
+  background: #3b82f6;
+  border-radius: 50%; filter: blur(80px); opacity: 0.2;
+}
+.bg-blur-right {
+  position: absolute;
+  bottom: 10%; right: 5%; width: 300px; height: 300px;
+  background: #8b5cf6;
+  border-radius: 50%; filter: blur(80px); opacity: 0.2;
+}
+.diet-modern-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+.modern-form-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.modern-title {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.modern-subtitle {
+  color: #d1d5db;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.modern-form-container {
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 40px 32px;
+  margin-bottom: 32px;
+  backdrop-filter: blur(12px);
+}
+.modern-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 900px) {
+  .modern-form-grid { grid-template-columns: 1fr; }
+}
+.input-group {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: box-shadow 0.2s;
+}
+.input-group:focus-within {
+  box-shadow: 0 0 0 2px #8b5cf6;
+}
+.input-group .input-icon {
+  color: #8b5cf6;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.input-group input,
+.input-group select {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1rem;
+  flex: 1;
+  padding: 8px 0;
+}
+.input-group input::placeholder {
+  color: #b0b0b0;
+}
+.modern-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.modern-section-title .input-icon {
+  color: #a78bfa;
+}
+.modern-submit-btn {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 36px;
+  margin-top: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transition: background 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+.modern-submit-btn:hover {
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  transform: translateY(-2px);
+}
+.error-message {
+  color: #ef4444;
+  background: rgba(239,68,68,0.08);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+/* Plan Card */
+.plan-modern-container {
+  background: rgba(255,255,255,0.10);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 36px 24px;
+  margin-bottom: 32px;
+  backdrop-filter: blur(10px);
+}
+.plan-modern-header {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 12px;
+  color: #fff;
+  padding: 18px 0;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.plan-modern-header h2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.plan-modern-header p {
+  font-size: 1.1rem;
+}
+.days-modern-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.day-modern-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 8px;
+}
+.day-modern-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.meals-modern-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 700px) {
+  .meals-modern-grid { grid-template-columns: 1fr; }
+}
+.meal-modern-card {
+  background: rgba(139,92,246,0.10);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.meal-modern-time {
+  font-weight: 600;
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.meal-modern-description {
+  font-size: 0.98rem;
+}
+.notes-modern-section {
+  margin-top: 18px;
+  background: rgba(16,185,129,0.10);
+  border-radius: 8px;
+  padding: 12px 18px;
+  color: #fff;
+}
+.notes-modern-title {
+  font-weight: bold;
+  color: #10b981;
+  margin-bottom: 6px;
+}
+.notes-modern-list {
+  margin: 0;
+  padding-left: 18px;
+}
+/* Thank You Modal */
+.thank-you-modern-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.thank-you-modern-modal {
+  background: #18181b;
+  border-radius: 18px;
+  padding: 40px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  text-align: center;
+  position: relative;
+  min-width: 320px;
+  max-width: 90vw;
+}
+.close-modern-button {
+  position: absolute;
+  top: 18px; right: 18px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.thank-you-modern-icon {
+  color: #10b981;
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+.thank-you-modern-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.thank-you-modern-message {
+  color: #d1d5db;
+  margin-bottom: 18px;
+}
+.thank-you-modern-details {
+  color: #a3e635;
+  margin-bottom: 18px;
+}
+.thank-you-modern-modal .modern-submit-btn {
+  margin-top: 0;
+} 
+
+/* Animated Gradient Title Underline */
+.modern-title-underline {
+  width: 320px;
+  height: 8px;
+  margin: 0 auto 18px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modern-title-underline-pulse {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+  animation: underlinePulse 2.5s infinite linear;
+  filter: blur(1px);
+}
+@keyframes underlinePulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+/* Floating/Glow Card */
+.floating-glow-card {
+  box-shadow: 0 8px 40px 0 rgba(139,92,246,0.18), 0 1.5px 8px 0 rgba(59,130,246,0.10);
+  border: 1.5px solid rgba(139,92,246,0.18);
+  transition: box-shadow 0.3s, border 0.3s;
+  position: relative;
+}
+.floating-glow-card:hover {
+  box-shadow: 0 12px 48px 0 rgba(139,92,246,0.28), 0 2px 12px 0 rgba(59,130,246,0.18);
+  border: 2px solid #8b5cf6;
+}
+
+/* Animated SVG Shapes */
+.svg-shape {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  animation: floatShape 8s ease-in-out infinite alternate;
+}
+.svg-shape-1 { top: 8%; left: 2%; animation-delay: 0s; }
+.svg-shape-2 { bottom: 10%; right: 4%; animation-delay: 2s; }
+@keyframes floatShape {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(20px) scale(1.08); }
+}
+
+/* Animated Icons in Inputs */
+.animated-icon {
+  transition: color 0.3s, transform 0.3s;
+}
+.input-group:focus-within .animated-icon {
+  color: #10b981;
+  transform: scale(1.18) rotate(-8deg);
+}
+
+/* Animated Inputs */
+.animated-input {
+  transition: box-shadow 0.2s, border 0.2s;
+}
+.animated-input:focus {
+  box-shadow: 0 0 0 2px #8b5cf6;
+  border: 1.5px solid #8b5cf6;
+}
+
+/* Motivational CTA Badge */
+.modern-cta-badge {
+  margin: 32px auto 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 32px;
+  padding: 10px 32px;
+  position: relative;
+  box-shadow: 0 2px 12px rgba(139,92,246,0.18);
+  overflow: hidden;
+}
+.modern-cta-pulse {
+  position: absolute;
+  left: 12px; top: 50%;
+  width: 16px; height: 16px;
+  background: #10b981;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  animation: ctaPulse 1.5s infinite;
+  opacity: 0.7;
+  z-index: 1;
+}
+@keyframes ctaPulse {
+  0% { box-shadow: 0 0 0 0 #10b98144; opacity: 0.7; }
+  70% { box-shadow: 0 0 0 12px #10b98111; opacity: 0.2; }
+  100% { box-shadow: 0 0 0 0 #10b98144; opacity: 0.7; }
+}
+.modern-cta-badge span {
+  position: relative;
+  z-index: 2;
+  margin-left: 18px;
+}
+
+/* Wavy SVG Divider */
+.svg-divider {
+  width: 100%;
+  margin: 0 0 24px 0;
+  z-index: 5;
+  position: relative;
+}
+.svg-divider svg {
+  width: 100%;
+  height: 60px;
+  display: block;
+}
+
+/* Ripple Button Effect */
+.ripple-btn {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.ripple-btn:active::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 120%; height: 120%;
+  background: rgba(139,92,246,0.18);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: rippleEffect 0.5s linear;
+  z-index: 2;
+}
+@keyframes rippleEffect {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+/* Plan Reveal Animation */
+.plan-modern-container {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  animation: planReveal 0.8s cubic-bezier(.4,1.4,.6,1) 0.1s forwards;
+}
+@keyframes planReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+} 

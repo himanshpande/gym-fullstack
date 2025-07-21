@@ -30,6 +30,7 @@ import {
   MicOff
 } from 'lucide-react';
 import apiService from '../services/api';
+import { color } from 'framer-motion';
 
 const GymFeatures = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -276,7 +277,7 @@ const response = await apiService.logWorkout({
       name: 'Legs & Glutes',
       icon: <Activity style={{ width: '32px', height: '32px' }} />,
       color: '#10b981',
-      image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop',
+      image: 'https://tse1.explicit.bing.net/th/id/OIP.WJ7FOnIlJSLB0FG0X-fFpAHaE9?w=768&h=514&rs=1&pid=ImgDetMain&o=7&rm=3',
       description: 'Powerful lower body workouts for strength and endurance',
       workoutCount: 18,
       difficulty: 'All Levels'
@@ -286,7 +287,7 @@ const response = await apiService.logWorkout({
       name: 'Cardio & HIIT',
       icon: <Heart style={{ width: '32px', height: '32px' }} />,
       color: '#f59e0b',
-      image: 'https://images.unsplash.com/photo-1506629905520-c2bb0c5988e7?w=400&h=300&fit=crop',
+      image: 'https://images.herzindagi.info/image/2022/May/fun-cardio-workout.jpg',
       description: 'High-intensity workouts for fat burning and endurance',
       workoutCount: 20,
       difficulty: 'Beginner to Advanced'
@@ -296,7 +297,7 @@ const response = await apiService.logWorkout({
       name: 'Back & Shoulders',
       icon: <Shield style={{ width: '32px', height: '32px' }} />,
       color: '#8b5cf6',
-      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
+      image: 'https://img.mensxp.com/media/content/2022/Nov/shutterstock_673719400_637dffdb71b11.jpeg',
       description: 'Strengthen your back and improve posture',
       workoutCount: 14,
       difficulty: 'Intermediate'
@@ -306,7 +307,7 @@ const response = await apiService.logWorkout({
       name: 'Yoga & Flexibility',
       icon: <RotateCcw style={{ width: '32px', height: '32px' }} />,
       color: '#ec4899',
-      image: 'https://images.unsplash.com/photo-1506629905520-c2bb0c5988e7?w=400&h=300&fit=crop',
+      image: 'https://www.hoshyoga.org/wp-content/uploads/2022/05/1296x728-body1-1296x728-1-1024x575.jpg',
       description: 'Improve flexibility and mental well-being',
       workoutCount: 25,
       difficulty: 'All Levels'
@@ -333,7 +334,7 @@ const response = await apiService.logWorkout({
         exercises: 12,
         calories: 200,
         description: 'Intense core workout for definition',
-        image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop'
+        image: 'https://tse3.mm.bing.net/th/id/OIP.ofL6r29IWkQJOh1R_r1RggHaE8?rs=1&pid=ImgDetMain&o=7&rm=3'
       },
       {
         id: 'abs-advanced',
@@ -343,7 +344,7 @@ const response = await apiService.logWorkout({
         exercises: 15,
         calories: 280,
         description: 'Ultimate abs challenge for experts',
-        image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop'
+        image: 'https://i.ytimg.com/vi/VIwmHy5ReeE/maxresdefault.jpg'
       }
     ],
     chest: [
@@ -365,7 +366,7 @@ const response = await apiService.logWorkout({
         exercises: 8,
         calories: 180,
         description: 'Sculpt and define your chest',
-        image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'
+        image: 'https://tse4.mm.bing.net/th/id/OIP.vxZE1Dr_BmWElYhqGKzZbwHaDK?rs=1&pid=ImgDetMain&o=7&rm=3'
       }
     ],
     legs: [
@@ -377,7 +378,7 @@ const response = await apiService.logWorkout({
         exercises: 12,
         calories: 320,
         description: 'Build powerful leg muscles',
-        image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop'
+        image: 'https://tse1.mm.bing.net/th/id/OIP.wP-0WDdZKbYay0vgz-hKlgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3'
       },
       {
         id: 'glutes-booty',
@@ -387,7 +388,7 @@ const response = await apiService.logWorkout({
         exercises: 9,
         calories: 150,
         description: 'Activate and strengthen glutes',
-        image: 'https://images.unsplash.com/photo-1506629905520-c2bb0c5988e7?w=400&h=300&fit=crop'
+        image: 'https://hips.hearstapps.com/hmg-prod/images/glute-activation-exercises-64b7feb35d2f7.jpg?crop=1.00xw:1.00xh;0,0&resize=2048:*'
       }
     ],
     cardio: [
@@ -399,7 +400,7 @@ const response = await apiService.logWorkout({
         exercises: 6,
         calories: 300,
         description: 'High-intensity fat burning session',
-        image: 'https://images.unsplash.com/photo-1506629905520-c2bb0c5988e7?w=400&h=300&fit=crop'
+        image: 'https://images.herzindagi.info/image/2022/May/fun-cardio-workout.jpg'
       },
       {
         id: 'cardio-endurance',
@@ -421,7 +422,7 @@ const response = await apiService.logWorkout({
         exercises: 10,
         calories: 220,
         description: 'Strengthen your entire back',
-        image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'
+        image: 'https://tse4.mm.bing.net/th/id/OIP.7nS5zczl6B_SOq9jDoo6vAHaEK?rs=1&pid=ImgDetMain&o=7&rm=3'
       }
     ],
     yoga: [
@@ -433,7 +434,7 @@ const response = await apiService.logWorkout({
         exercises: 15,
         calories: 120,
         description: 'Improve flexibility and reduce stress',
-        image: 'https://images.unsplash.com/photo-1506629905520-c2bb0c5988e7?w=400&h=300&fit=crop'
+        image: 'https://images.pexels.com/photos/917732/pexels-photo-917732.jpeg?_gl=1*4a35qh*_ga*MjA3NTUzMjcyMC4xNzUzMDI5ODg3*_ga_8JE65Q40S6*czE3NTMwMjk4ODYkbzEkZzAkdDE3NTMwMjk4ODYkajYwJGwwJGgw'
       }
     ]
   };
@@ -588,7 +589,7 @@ const response = await apiService.logWorkout({
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%)',
+      // background: 'linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%)',
       color: 'white'
     },
     header: {
@@ -606,10 +607,10 @@ const response = await apiService.logWorkout({
       transition: 'all 1s ease'
     },
     titleGradient: {
-      background: 'linear-gradient(to right, #c084fc, #f472b6)',
+      color:'#00a0c0',
       WebkitBackgroundClip: 'text',
       backgroundClip: 'text',
-      color: 'transparent'
+      // color: 'transparent'
     },
     subtitle: {
       fontSize: '1.25rem',
