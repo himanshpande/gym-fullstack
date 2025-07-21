@@ -32,6 +32,19 @@ const GymCourses = () => {
     }
   })
 
+  useEffect(() => {
+    // Load cart from localStorage on mount
+    const storedCart = localStorage.getItem('gym_cart');
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save cart to localStorage whenever it changes
+    localStorage.setItem('gym_cart', JSON.stringify(cart));
+  }, [cart]);
+
   const GOOGLE_PAY_UPI_ID = 'vp1246194@okhdfcbank' // Replace with your business UPI ID
   const GOOGLE_PAY_MERCHANT_NAME = 'Vineet Pandey'
   const MERCHANT_UPI_ID = 'vp1246194@okhdfcbank'
@@ -482,253 +495,241 @@ const GymCourses = () => {
     const finalTotal = total + Math.round(total * 0.18);
     
     return (
-      <div className="payment-container">
-        <div className="payment-header">
-          <button 
-            className="back-button"
-            onClick={handleBackToCart}
-          >
-            <ArrowLeft size={20} />
-            Back to Cart
-          </button>
-          <h1>Secure Checkout</h1>
-          <div className="ssl-badge">
-            <Shield size={16} />
-            <span>SSL Secured</span>
-          </div>
-        </div>
-
-        <div className="payment-content">
-          {/* Order Summary */}
-          <div className="order-summary">
-            <h2>
-              <ShoppingCart size={20} />
-              Order Summary
-            </h2>
-            
-            <div className="order-items">
-              {cart.map((item) => (
-                <div key={item.id} className="order-item">
-                  <img src={item.image} alt={item.name} className="item-image" />
-                  <div className="item-details">
-                    <h4>{item.name}</h4>
-                    <p>{item.category} • {item.duration}</p>
-                  </div>
-                  <span className="item-price">₹{item.price}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="order-total">
-              <div className="total-line">
-                <span>Subtotal:</span>
-                <span>₹{total}</span>
-              </div>
-              <div className="total-line">
-                <span>GST (18%):</span>
-                <span>₹{Math.round(total * 0.18)}</span>
-              </div>
-              <div className="total-line final-total">
-                <span>Total:</span>
-                <span>₹{finalTotal}</span>
-              </div>
+      <>
+        <div className="payment-container">
+          <div className="payment-header">
+            <button 
+              className="back-button"
+              onClick={handleBackToCart}
+            >
+              <ArrowLeft size={20} />
+              Back to Cart
+            </button>
+            <h1>Secure Checkout</h1>
+            <div className="ssl-badge">
+              <Shield size={16} />
+              <span>SSL Secured</span>
             </div>
           </div>
 
-          {/* Payment Form */}
-          <div className="payment-form-container">
-            <h2>
-              <CreditCard size={20} />
-              Payment Details
-            </h2>
-
-            <form onSubmit={handlePayment}>
-              {/* Customer Information */}
-              <div className="customer-info">
-                <h3>Customer Information</h3>
-                
-                <div className="form-field">
-                  <label>Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={paymentData.customerInfo.name}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={paymentData.customerInfo.email}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your email"
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>Phone Number *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={paymentData.customerInfo.phone}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>Address</label>
-                  <textarea
-                    name="address"
-                    value={paymentData.customerInfo.address}
-                    onChange={handleInputChange}
-                    placeholder="Enter your address"
-                    rows="3"
-                  />
-                </div>
+          <div className="payment-content">
+            {/* Order Summary */}
+            <div className="order-summary">
+              <h2>
+                <ShoppingCart size={20} />
+                Order Summary
+              </h2>
+              
+              <div className="order-items">
+                {cart.map((item) => (
+                  <div key={item.id} className="order-item">
+                    <img src={item.image} alt={item.name} className="item-image" />
+                    <div className="item-details">
+                      <h4>{item.name}</h4>
+                      <p>{item.category} • {item.duration}</p>
+                    </div>
+                    <span className="item-price">₹{item.price}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* Payment Method Selection */}
-              <div className="payment-methods">
-                <h3>Payment Method</h3>
-                
-                <div className="payment-method-options">
-                  <div 
-                    className={`payment-method ${paymentData.selectedPaymentMethod === 'googlepay' ? 'selected' : ''}`}
-                    onClick={() => handlePaymentMethodChange('googlepay')}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="googlepay"
-                      checked={paymentData.selectedPaymentMethod === 'googlepay'}
-                      onChange={() => handlePaymentMethodChange('googlepay')}
-                    />
-                    <div className="gpay-badge">
-                      G Pay
-                    </div>
-                    <div className="method-info">
-                      <strong>Google Pay</strong>
-                      <p>Pay with Google Pay app</p>
-                    </div>
-                  </div>
-
-                  <div 
-                    className={`payment-method ${paymentData.selectedPaymentMethod === 'upi' ? 'selected' : ''}`}
-                    onClick={() => handlePaymentMethodChange('upi')}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="upi"
-                      checked={paymentData.selectedPaymentMethod === 'upi'}
-                      onChange={() => handlePaymentMethodChange('upi')}
-                    />
-                    <Smartphone size={20} />
-                    <div className="method-info">
-                      <strong>UPI Direct</strong>
-                      <p>Pay with any UPI app</p>
-                    </div>
-                  </div>
+              <div className="order-total">
+                <div className="total-line">
+                  <span>Subtotal:</span>
+                  <span>₹{total}</span>
+                </div>
+                <div className="total-line">
+                  <span>GST (18%):</span>
+                  <span>₹{Math.round(total * 0.18)}</span>
+                </div>
+                <div className="total-line final-total">
+                  <span>Total:</span>
+                  <span>₹{finalTotal}</span>
                 </div>
               </div>
+            </div>
 
-              {/* Payment Status */}
-              {paymentData.paymentStatus && (
-                <div className={`payment-status ${paymentData.paymentStatus}`}>
-                  {paymentData.paymentStatus === 'success' && (
-                    <>
-                      <CheckCircle size={20} />
-                      <span>Payment successful! Redirecting...</span>
-                    </>
-                  )}
-                  {paymentData.paymentStatus === 'failed' && (
-                    <>
-                      <XCircle size={20} />
-                      <span>Payment failed. Please try again.</span>
-                    </>
-                  )}
-                  {paymentData.paymentStatus === 'processing' && (
-                    <>
-                      <div className="spinner"></div>
-                      <span>Processing payment...</span>
-                    </>
-                  )}
-                  {paymentData.paymentStatus === 'upi_initiated' && (
-                    <>
-                      <Info size={20} />
-                      <span>Preparing UPI payment...</span>
-                    </>
-                  )}
-                  {(paymentData.paymentStatus === 'qr_display' || paymentData.paymentStatus === 'upi_display') && (
-                    <>
-                      <QrCode size={20} />
-                      <span>Scan QR code to complete payment</span>
-                    </>
-                  )}
-                </div>
-              )}
+            {/* Payment Form */}
+            <div className="payment-form-container">
+              <h2>
+                <CreditCard size={20} />
+                Payment Details
+              </h2>
 
-              {/* QR Code Display */}
-              {(paymentData.paymentStatus === 'qr_display' || paymentData.paymentStatus === 'upi_display') && paymentData.qrData && (
-                <div className="qr-display">
-                  {generateQRCode(paymentData.qrData.amount, paymentData.qrData.upiId, paymentData.qrData.merchantName)}
+              <form onSubmit={handlePayment}>
+                {/* Customer Information */}
+                <div className="customer-info">
+                  <h3>Customer Information</h3>
                   
-                  <div className="payment-confirm-buttons">
-                    <button 
-                      type="button"
-                      onClick={handlePaymentSuccess}
-                      className="success-btn"
-                    >
-                      ✓ Payment Completed
-                    </button>
-                    <button 
-                      type="button"
-                      onClick={() => setPaymentData(prev => ({ ...prev, paymentStatus: 'failed' }))}
-                      className="failed-btn"
-                    >
-                      ✗ Payment Failed
-                    </button>
+                  <div className="form-grid-2col">
+                    <div className="form-field">
+                      <label>Full Name *</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={paymentData.customerInfo.name}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Email Address *</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={paymentData.customerInfo.email}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Phone Number *</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={paymentData.customerInfo.phone}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Enter your phone number"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Address</label>
+                      <textarea
+                        name="address"
+                        value={paymentData.customerInfo.address}
+                        onChange={handleInputChange}
+                        placeholder="Enter your address"
+                        rows="3"
+                      />
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* Pay Button */}
-              {(!paymentData.paymentStatus || paymentData.paymentStatus === 'failed') && (
-                <button 
-                  type="submit" 
-                  className={`pay-button ${paymentData.isProcessing ? 'processing' : ''}`}
-                  disabled={paymentData.isProcessing}
-                >
-                  {paymentData.isProcessing ? (
-                    <>
-                      <div className="spinner"></div>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <Lock size={16} />
-                      Pay ₹{finalTotal} Securely
-                    </>
-                  )}
-                </button>
-              )}
-            </form>
+                {/* Payment Method Selection */}
+                <div className="payment-methods">
+                  <h3>Payment Method</h3>
+                  
+                  <div className="payment-method-options">
+                    <div 
+                      className={`payment-method ${paymentData.selectedPaymentMethod === 'googlepay' ? 'selected' : ''}`}
+                      onClick={() => handlePaymentMethodChange('googlepay')}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="googlepay"
+                        checked={paymentData.selectedPaymentMethod === 'googlepay'}
+                        onChange={() => handlePaymentMethodChange('googlepay')}
+                      />
+                      <div className="gpay-badge">
+                        G Pay
+                      </div>
+                      <div className="method-info">
+                        <strong>Google Pay</strong>
+                        <p>Pay with Google Pay app</p>
+                      </div>
+                    </div>
 
-            <div className="ssl-notice">
-              <Lock size={12} />
-              Your payment information is encrypted and secure. We use industry-standard SSL encryption to protect your data.
+                    <div 
+                      className={`payment-method ${paymentData.selectedPaymentMethod === 'upi' ? 'selected' : ''}`}
+                      onClick={() => handlePaymentMethodChange('upi')}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="upi"
+                        checked={paymentData.selectedPaymentMethod === 'upi'}
+                        onChange={() => handlePaymentMethodChange('upi')}
+                      />
+                      <Smartphone size={20} />
+                      <div className="method-info">
+                        <strong>UPI Direct</strong>
+                        <p>Pay with any UPI app</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payment Status */}
+                {paymentData.paymentStatus && (
+                  <div className={`payment-status ${paymentData.paymentStatus}`}>
+                    {paymentData.paymentStatus === 'success' && (
+                      <>
+                        <CheckCircle size={20} />
+                        <span>Payment successful! Redirecting...</span>
+                      </>
+                    )}
+                    {paymentData.paymentStatus === 'failed' && (
+                      <>
+                        <XCircle size={20} />
+                        <span>Payment failed. Please try again.</span>
+                      </>
+                    )}
+                    {paymentData.paymentStatus === 'processing' && (
+                      <>
+                        <div className="spinner"></div>
+                        <span>Processing payment...</span>
+                      </>
+                    )}
+                    {paymentData.paymentStatus === 'upi_initiated' && (
+                      <>
+                        <Info size={20} />
+                        <span>Preparing UPI payment...</span>
+                      </>
+                    )}
+                    {(paymentData.paymentStatus === 'qr_display' || paymentData.paymentStatus === 'upi_display') && (
+                      <>
+                        <QrCode size={20} />
+                        <span>Scan QR code to complete payment</span>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* Pay Button */}
+                {(!paymentData.paymentStatus || paymentData.paymentStatus === 'failed') && (
+                  <button 
+                    type="submit" 
+                    className={`pay-button ${paymentData.isProcessing ? 'processing' : ''}`}
+                    disabled={paymentData.isProcessing}
+                  >
+                    {paymentData.isProcessing ? (
+                      <>
+                        <div className="spinner"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Lock size={16} />
+                        Pay ₹{finalTotal} Securely
+                      </>
+                    )}
+                  </button>
+                )}
+              </form>
+
+              
             </div>
           </div>
         </div>
-      </div>
+        {(paymentData.paymentStatus === 'qr_display' || paymentData.paymentStatus === 'upi_display') && paymentData.qrData && (
+          <div className="qr-modal-overlay">
+            <div className="qr-modal">
+              <button className="qr-modal-close" onClick={() => setPaymentData(prev => ({ ...prev, paymentStatus: null, qrData: null, isProcessing: false }))}>
+                <X size={24} />
+              </button>
+              {generateQRCode(paymentData.qrData.amount, paymentData.qrData.upiId, paymentData.qrData.merchantName)}
+              <div className="payment-confirm-buttons">
+                
+                
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 
@@ -737,10 +738,6 @@ const GymCourses = () => {
     <div className="gym-container">
       {/* Header Section */}
       <div className="header-section" data-aos="fade-down">
-        <div className="premium-badge">
-          <Dumbbell size={16} />
-          Premium Fitness Programs
-        </div>
         <h1 className="main-title">Transform Your Body</h1>
 
         <p className="main-subtitle">

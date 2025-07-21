@@ -13,9 +13,11 @@ import Footer from '../footer/footer.jsx'; // Importing Footer component
 function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] = useState(null);
+  const [pageLoaded, setPageLoaded] = useState(false);
 
   useEffect(() => {
     AOS.init({ duration: 800 });
+    setTimeout(() => setPageLoaded(true), 50);
     
     // Fetch user data from localStorage
     const fetchUserData = () => {
@@ -68,44 +70,45 @@ function Home() {
 
   return (
     <div>
-      <nav className="navbar" data-aos="fade-down">
-        <div className="logo">PulseForge</div>
-        <ul className="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/feature">Categories</a></li>
-          <li><a href="diet">Diet</a></li>
-          <li><a href="/ContactSection">Contact</a></li>
-          
+      <div className={`page-fadein ${pageLoaded ? 'page-fadein-active' : ''}`}>
+        <nav className="navbar" data-aos="fade-down">
+          <div className="logo">PulseForge</div>
+          <ul className="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/feature">Categories</a></li>
+            <li><a href="diet">Diet</a></li>
+            <li><a href="/ContactSection">Contact</a></li>
+            
 
-        </ul>
+          </ul>
 
-        {/* Profile Icon with Dropdown */}
-        <div className="profile-icon" onClick={toggleDropdown}>
-          <img src={getProfilePicture()} alt="Profile" />
+          {/* Profile Icon with Dropdown */}
+          <div className="profile-icon" onClick={toggleDropdown}>
+            <img src={getProfilePicture()} alt="Profile" />
+          </div>
+          {showDropdown && (
+            <ProfileDropdown 
+              onClose={closeDropdown} 
+              user={user}
+            />
+          )}
+        </nav>
+
+        <section className="hero" data-aos="zoom-in">
+          <div className="hero-content">
+            <h1>Your Transformation Starts Here</h1>
+            <p>Sweat. Strength. Success. Repeat.</p>
+            <Link to="/courses" className="hero-button">Get Started</Link>
+          </div>
+        </section>
+        <div id="features">
+
+        <TrainersSection />
+        <MembershipSection />
+        <ReviewsSection />
+        <Footer />
         </div>
-        {showDropdown && (
-          <ProfileDropdown 
-            onClose={closeDropdown} 
-            user={user}
-          />
-        )}
-      </nav>
-
-      <section className="hero" data-aos="zoom-in">
-        <div className="hero-content">
-          <h1>Your Transformation Starts Here</h1>
-          <p>Sweat. Strength. Success. Repeat.</p>
-          <Link to="/courses" className="hero-button">Get Started</Link>
-        </div>
-      </section>
-      <div id="features">
-
-      <TrainersSection />
-      <MembershipSection />
-      <ReviewsSection />
-      <Footer />
       </div>
-
     </div>
   );
 }

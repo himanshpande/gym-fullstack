@@ -572,21 +572,20 @@ body {
 }
 
 .payment-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  margin: 0 auto;
+display: flex;
+    flex-direction: row;
+    gap: 12rem;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
 }
 
 .order-summary {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
-  height: fit-content;
-  width: 100%;
+  flex: 1 1 350px;
+  min-width: 320px;
+  max-width: 420px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .order-summary h2 {
@@ -663,12 +662,12 @@ body {
 }
 
 .payment-form-container {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
-  width: 100%;
+         background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    width: 45%;
 }
 
 .payment-form-container h2 {
@@ -1062,5 +1061,66 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+@media (max-width: 700px) {
+  .form-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.qr-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(20, 22, 34, 0.85);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.qr-modal {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 8px 40px 0 rgba(139,92,246,0.18);
+  padding: 36px 32px 24px 32px;
+  min-width: 320px;
+  max-width: 95vw;
+  max-height: 90vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: modalPopIn 0.25s cubic-bezier(.4,1.4,.6,1);
+}
+@keyframes modalPopIn {
+  from { transform: scale(0.92) translateY(40px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+.qr-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.qr-modal-close:hover {
+  opacity: 1;
 }
 
